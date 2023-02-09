@@ -40,7 +40,12 @@ cd ${dir}/src
 # clone carma repos
 git clone --depth=1 https://github.com/KBR-CARMA/carma-msgs.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/carma-utils.git --branch c1tenth-develop
-git clone --depth=1 https://github.com/KBR-CARMA/carma-messenger.git --branch c1tenth-develop  
+git clone --depth=1 https://github.com/KBR-CARMA/carma-messenger.git --branch c1tenth-develop 
+git clone --depth=1 https://github.com/KBR-CARMA/vesc.git --branch c1tenth-develop
+git clone --depth=1 https://github.com/KBR-CARMA/bno055.git --branch c1tenth-develop
+git clone --depth=1 https://github.com/KBR-CARMA/sllidar_ros2.git --branch c1tenth-develop
+git clone --depth=1 https://github.com/KBR-CARMA/dwm1001_ros2.git --branch c1tenth-develop
+
 
 # add astuff messages
 # NOTE: The ibeo_msgs package is ignored because on build the cmake files in that package run a sed command 
