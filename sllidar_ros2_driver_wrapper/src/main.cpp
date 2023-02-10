@@ -15,14 +15,14 @@
  */
 #include <memory>
 
-#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.hpp"
+#include "sllidar_ros2_driver_wrapper/sllidar_ros2_driver_wrapper.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc, char ** argv)
 {
     rclcpp::init(argc,argv);
 
-    auto node = std::make_shared<velodyne_lidar_driver_wrapper::Node>(rclcpp::NodeOptions());
+    auto node = std::make_shared<sllidar_ros2_driver_wrapper::Node>(rclcpp::NodeOptions());
 
     // We use the multi threaded executor here to support the rentrent callbacks of the ros2_lifecycle_manager
     rclcpp::executors::MultiThreadedExecutor executor;
