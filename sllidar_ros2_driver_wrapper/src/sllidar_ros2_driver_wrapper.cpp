@@ -15,9 +15,9 @@
  */
 
 #include <memory>
-#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.hpp"
+#include "sllidar_ros2_driver_wrapper/sllidar_ros2_driver_wrapper.hpp"
 
-namespace velodyne_lidar_driver_wrapper
+namespace sllidar_ros2_driver_wrapper
 {
     Node::Node(const rclcpp::NodeOptions &options)
         : CarmaLifecycleNode(options)
@@ -35,7 +35,7 @@ namespace velodyne_lidar_driver_wrapper
 
     carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
     {
-        RCLCPP_INFO_STREAM(this->get_logger(), "Velodyne Driver wrapper trying to configure");
+        RCLCPP_INFO_STREAM(this->get_logger(), "Sllidar Driver wrapper trying to configure");
 
         config_ = Config();
         //Load Parameters
@@ -75,4 +75,4 @@ namespace velodyne_lidar_driver_wrapper
 #include "rclcpp_components/register_node_macro.hpp"
 
 // Register the component with class_loader
-RCLCPP_COMPONENTS_REGISTER_NODE(velodyne_lidar_driver_wrapper::Node)
+RCLCPP_COMPONENTS_REGISTER_NODE(sllidar_ros2_driver_wrapper::Node)
