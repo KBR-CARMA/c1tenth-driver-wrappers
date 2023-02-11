@@ -1,0 +1,2 @@
+# Timeout threshold for point cloud message, in seconds
+point_cloud_timeout: 0.5
