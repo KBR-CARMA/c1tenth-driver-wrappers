@@ -48,22 +48,35 @@ carma $ ln -s /home/carma/c1tenth-driver-wrappers
 ```
 ## Return to the workspace
 ```sh
-carma $ cd ..
+carma $ cd ~
+```
+## Clone your driver alongside the driver wrapper
+```
+carma $ git clone https://github.com/KBR-CARMA/mydriver.git -b c1tenth-develop 
 ```
 ## Source the containers ROS2
 ```sh
 carma $ source /opt/carma/install_ros2/setup.bash
 ```
-# Building the wrapper code
+# Building the driver and wrapper code
 
-## Verify that your package is in the ROS2 path
+## Verify that both driver and wrapper packages are in the ROS2 build path
 ```sh
 carma $ colcon list
 ```
+`my_driver   `
 `my_driver_wrapper`
-## Build the package
+
+## Build the packages
 ```sh
-carma $ colcon build
+carma $ colcon build --packages-up-to my_driver_wrapper 
+
+Starting >>> my_driver
+[Processing: my_driver]
+.
+.
+.
+Finished <<< my_driver
 
 Starting >>> my_driver_wrapper
 [Processing: my_driver_wrapper]
