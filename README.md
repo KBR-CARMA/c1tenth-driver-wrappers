@@ -36,28 +36,30 @@ $ docker run -it --rm -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver
 ```sh
 carma@a1d099b96ab7:/$
 ```
+## Source the containers ROS2
+```sh
+carma $ source /opt/carma/install_ros2/setup.bash
+```
+
 
 ## Create a workspace inside the container
 ```sh 
-carma $ mkdir -p ~/tmp_ws/src
+carma $ mkdir -p ~/tmp_ws/src  
 carma $ cd ~/tmp_ws/src
 ```
 ## Create a symlink to the package c1tenth-driver-wrappers -> /home/carma/c1tenth-driver-wrappers/
 ```sh 
 carma $ ln -s /home/carma/c1tenth-driver-wrappers 
 ```
-## Return to the workspace
+## Back to the workspace
 ```sh
-carma $ cd ~
+carma $ cd ..
 ```
 ## Clone your driver alongside the driver wrapper
 ```
 carma $ git clone https://github.com/KBR-CARMA/mydriver.git -b c1tenth-develop 
 ```
-## Source the containers ROS2
-```sh
-carma $ source /opt/carma/install_ros2/setup.bash
-```
+
 # Building the driver and wrapper code
 
 ## Verify that both driver and wrapper packages are in the ROS2 build path
