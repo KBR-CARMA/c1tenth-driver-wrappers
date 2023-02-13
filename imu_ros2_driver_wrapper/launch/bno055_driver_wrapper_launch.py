@@ -13,7 +13,7 @@ bno055_pkg_prefix = get_package_share_directory('bno055'),
 
 # TODO: remapings, params, names
 bno055_driver_param_file = os.path.join(
-  get_package_share_directory('bno055'), 'config', 'bno055.params.yaml')
+  get_package_share_directory('bno055'), 'config', 'bno055/params/bno055.params.yaml')
 
 bno055_wrapper_param_file = os.path.join(
   get_package_share_directory('bno055_driver_wrapper'), 'config', 'bno055_driver_wrapper.params.yaml')
