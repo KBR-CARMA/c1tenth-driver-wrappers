@@ -30,7 +30,7 @@ Launch docker c1tenth-develop using your local wrappers folder
 as a carma user volume alias and bash into it
 
 ```sh
-$ docker run -it --rm -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver-wrappers quitter.tech/carma-platform:c1tenth-develop bash
+$ docker run -it --rm --name dev --device /dev/sensors/myudev -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver-wrappers quitter.tech/carma-platform:c1tenth-develop bash
 ```
 ## The prompt should now look something like this
 ```sh
@@ -91,5 +91,5 @@ carma $ source install/setup.bash
 ```
 ## Launch the package
 ```sh
-carma $ ros2 launch my_driver_wrapper my_driver_wrapper_launch.py
+carma $ ros2 launch my_driver_wrapper my_driver_wrapper_launch.py uart:=/dev/sensors/myudev
 ```
