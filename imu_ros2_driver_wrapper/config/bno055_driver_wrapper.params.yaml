@@ -1,0 +1,3 @@
+bno055_driver_wrapper:
+  ros__parameters:
+    ros_topic_prefix: "bno055/"
