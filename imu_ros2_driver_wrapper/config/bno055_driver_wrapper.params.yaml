@@ -1,2 +1,3 @@
-# Timeout threshold for point cloud message, in seconds
-point_cloud_timeout: 0.5
+bno055_driver_wrapper:
+  ros__parameters:
+    ros_topic_prefix: "bno055/"

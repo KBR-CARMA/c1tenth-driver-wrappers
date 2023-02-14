@@ -51,10 +51,7 @@ carma $ cd ~/tmp_ws/src
 ```sh 
 carma $ ln -s /home/carma/c1tenth-driver-wrappers 
 ```
-## Back to the workspace
-```sh
-carma $ cd ..
-```
+
 ## Clone your driver alongside the driver wrapper
 ```
 carma $ git clone https://github.com/KBR-CARMA/mydriver.git -b c1tenth-develop 
@@ -71,6 +68,7 @@ carma $ colcon list
 
 ## Build the packages
 ```sh
+carma $ cd ~/tmp_ws
 carma $ colcon build --packages-up-to my_driver_wrapper 
 
 Starting >>> my_driver
