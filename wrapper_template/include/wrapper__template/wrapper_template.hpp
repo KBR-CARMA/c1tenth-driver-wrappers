@@ -43,6 +43,7 @@ namespace wrapper_template
         carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state);
         
         private:
+        // Change to generic sensor messages
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;
         rclcpp::Time last_update_time_;
         double point_cloud_timeout_;

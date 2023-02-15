@@ -21,19 +21,15 @@
 
 namespace wrapper_template
 {
-    /**
-  * \brief Stuct containing the algorithm configuration values for the VelodyneLidarDriverWrapper
-  */
-
     struct Config
     {
-        double point_cloud_timeout = 0.2;
+        double wrapper_template_timeout = 0.2;
 
         // Stream operator for this config
         friend std::ostream &operator<<(std::ostream &output, const Config &c)
         {
-            output << "templateDriverWrapper::Config { "<<std::endl
-                   <<"point_cloud_timeout: "<<c.point_cloud_timeout<<std::endl;
+            output << "wrapperTemplate::Config { "<<std::endl
+                   <<"wrapper_template_timeout: "<<c.wrapper_template_timeout<<std::endl;
             
             return output;
         }
