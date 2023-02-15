@@ -16,16 +16,16 @@
 
 // TODO: Resolve point cloud equivalent for IMU 
 #include <memory>
-#include "bno055_driver_wrapper/bno055_driver_wrapper.hpp"
+#include "wrapper_template/wrapper_template.hpp"
 
-namespace bno055_driver_wrapper
+namespace wrapper_template
 {
     Node::Node(const rclcpp::NodeOptions &options)
         : CarmaLifecycleNode(options)
     {
         config_ = Config();
         //Load Parameters
-        config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+        config_.point_cloud_timeout = this->declare_parameter<double>("wrapper_template_timeout", config_.point_cloud_timeout);
     }
 
     void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
@@ -36,15 +36,15 @@ namespace bno055_driver_wrapper
 
     carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
     {
-        RCLCPP_INFO_STREAM(this->get_logger(), "bno055 Driver wrapper trying to configure");
+        RCLCPP_INFO_STREAM(this->get_logger(), "wrapper template trying to configure");
 
         config_ = Config();
         //Load Parameters
-        this->get_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+        this->get_parameter<double>("wrapper_template_timeout", config_.point_cloud_timeout);
 
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
 
-        //Add subscriber(s)
+        // Subscribe to the driver you are wrapping
         point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("lidar/points_raw", 1,
             std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
         
@@ -76,4 +76,4 @@ namespace bno055_driver_wrapper
 #include "rclcpp_components/register_node_macro.hpp"
 
 // Register the component with class_loader
-RCLCPP_COMPONENTS_REGISTER_NODE(bno055_driver_wrapper::Node)
+RCLCPP_COMPONENTS_REGISTER_NODE(wrapper_template::Node)

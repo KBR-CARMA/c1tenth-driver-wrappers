@@ -15,14 +15,14 @@
  */
 #include <memory>
 
-#include "bno055_driver_wrapper/bno055_driver_wrapper.hpp"
+#include "template_driver_wrapper/template_driver_wrapper.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc, char ** argv)
 {
     rclcpp::init(argc,argv);
 
-    auto node = std::make_shared<bno055_driver_wrapper::Node>(rclcpp::NodeOptions());
+    auto node = std::make_shared<template_driver_wrapper::Node>(rclcpp::NodeOptions());
 
     // We use the multi threaded executor here to support the rentrent callbacks of the ros2_lifecycle_manager
     rclcpp::executors::MultiThreadedExecutor executor;

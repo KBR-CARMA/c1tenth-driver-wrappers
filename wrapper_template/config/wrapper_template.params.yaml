@@ -1,0 +1,3 @@
+temjplate_driver_wrapper:
+  ros__parameters:
+    ros_topic_prefix: "wrapper_template/"

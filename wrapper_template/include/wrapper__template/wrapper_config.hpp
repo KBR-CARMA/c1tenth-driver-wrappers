@@ -19,7 +19,7 @@
 #include <iostream>
 #include <vector>
 
-namespace bno055_driver_wrapper
+namespace wrapper_template
 {
     /**
   * \brief Stuct containing the algorithm configuration values for the VelodyneLidarDriverWrapper
@@ -32,10 +32,10 @@ namespace bno055_driver_wrapper
         // Stream operator for this config
         friend std::ostream &operator<<(std::ostream &output, const Config &c)
         {
-            output << "bno055DriverWrapper::Config { "<<std::endl
+            output << "templateDriverWrapper::Config { "<<std::endl
                    <<"point_cloud_timeout: "<<c.point_cloud_timeout<<std::endl;
             
             return output;
         }
     };
-}//namespace bno055_driver_wrapper
+}//namespace wrapper_template

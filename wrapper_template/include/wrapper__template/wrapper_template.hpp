@@ -17,9 +17,9 @@
 
 #include "carma_ros2_utils/carma_lifecycle_node.hpp"
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include "bno055_driver_wrapper/bno055_driver_wrapper_config.hpp"
+#include "wrapper_template/wrapper_template_config.hpp"
 
-namespace bno055_driver_wrapper
+namespace wrapper_template
 {
     class Node : public carma_ros2_utils::CarmaLifecycleNode
     {
