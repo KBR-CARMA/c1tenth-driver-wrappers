@@ -14,17 +14,14 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-if [[ ! -z "$ROS2_PACKAGES" ]]; then
-    echo "Sourcing previous build for incremental build start point..."
-    source /opt/carma/install/setup.bash
-else
-    echo "Sourcing base image for full build..."
-    source /opt/ros/foxy/setup.bash
-fi
+# Source the CARMA and ROS2 toolchains.
+source /opt/carma/install_ros2/setup.bash
 
-cd ~/
-if [[ ! -z "$ROS2_PACKAGES" ]]; then
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-above $ROS2_PACKAGES
-else
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-fi
+# Change to our ROS2 workspace
+cd /home/carma
+
+# Install all required dependencies for the source code we pulled.
+rosdep install --from-paths src --ignore-src -r -y
+
+# Build everything.
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
