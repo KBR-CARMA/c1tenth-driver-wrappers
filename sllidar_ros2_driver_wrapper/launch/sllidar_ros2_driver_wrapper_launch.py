@@ -25,8 +25,8 @@ def generate_launch_description():
           output='screen',
           remappings=[
               ('scan', 'points_raw')
-          ]
-      )
+              
+              ])
 
   sllidar_ros2_driver_wrapper_node = Node(
           package='sllidar_ros2_driver_wrapper',
@@ -35,9 +35,11 @@ def generate_launch_description():
           namespace='lidar',
           parameters=[sllidar_wrapper_param_file],
           output='screen'
-      )
+          
+          )
 
-return launch.LaunchDescription([
+    return launch.LaunchDescription([
         sllidar_node,
         sllidar_ros2_driver_wrapper_node
-    ])
+        
+        ])
