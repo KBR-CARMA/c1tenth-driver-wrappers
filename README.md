@@ -69,6 +69,7 @@ carma $ colcon list
 ## Build the packages
 ```sh
 carma $ cd ~/tmp_ws
+carma $ rosdep install --from-paths src --ignore-src -r -y
 carma $ colcon build --packages-up-to my_driver_wrapper 
 
 Starting >>> my_driver
@@ -92,4 +93,8 @@ carma $ source install/setup.bash
 ## Launch the package
 ```sh
 carma $ ros2 launch my_driver_wrapper my_driver_wrapper_launch.py uart:=/dev/sensors/myudev
+```
+Or if you are using a params file
+```sh
+ros2 launch my_driver_wrapper my_driver_wrapper_launch.py --ros-args --params-file ./src/my_driver/my_driver/params/my_driver_params.yaml
 ```
