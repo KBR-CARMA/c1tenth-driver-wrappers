@@ -19,44 +19,14 @@
 
 set -exo pipefail
 
-dir=~
-while [[ $# -gt 0 ]]; do
-      arg="$1"
-      case $arg in
-            -d|--develop)
-                  BRANCH=develop
-                  shift
-            ;;
-            -r|--root)
-                  dir=$2
-                  shift
-                  shift
-            ;;
-      esac
-done
+# Move to our source directory
+cd /home/carma/src
 
-cd ${dir}/src
+# Check out a serial dependency
+git clone --depth=1 https://github.com/KBR-CARMA/transport_drivers.git --branch c1tenth-develop
 
-# clone carma repos
-git clone --depth=1 https://github.com/KBR-CARMA/carma-msgs.git --branch c1tenth-develop
-git clone --depth=1 https://github.com/KBR-CARMA/carma-utils.git --branch c1tenth-develop
-git clone --depth=1 https://github.com/KBR-CARMA/carma-messenger.git --branch c1tenth-develop 
+# Check out all the drivers
 git clone --depth=1 https://github.com/KBR-CARMA/vesc.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/bno055.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/sllidar_ros2.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/dwm1001_ros2.git --branch c1tenth-develop
-
-
-# add astuff messages
-# NOTE: The ibeo_msgs package is ignored because on build the cmake files in that package run a sed command 
-#       which can make them incompatible with a new ros version after a source switch
-git clone https://github.com/astuff/astuff_sensor_msgs 
-
-cd astuff_sensor_msgs
-git checkout 41d5ef0c33fb27eb3c9ba808b51332bcce186a83
-
-# Disable ibeo_msgs
-cd ibeo_msgs
-echo "" > COLCON_IGNORE
-cd ../astuff_sensor_msgs
-echo "" > COLCON_IGNORE
