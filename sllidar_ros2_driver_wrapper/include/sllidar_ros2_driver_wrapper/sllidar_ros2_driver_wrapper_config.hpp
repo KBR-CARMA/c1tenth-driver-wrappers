@@ -20,7 +20,7 @@
 #include <vector>
 
 namespace sllidar_ros2_driver_wrapper
-
+{
     /**
   * \brief Stuct containing the algorithm configuration values for the VelodyneLidarDriverWrapper
   */
