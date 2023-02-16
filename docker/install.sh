@@ -23,5 +23,6 @@ cd /home/carma
 # Install all required dependencies for the source code we pulled.
 rosdep install --from-paths src --ignore-src -r -y
 
-# Build everything.
-colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+# Build everything we need for our drivers
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
+  --packages-up-to bno055_ros2_driver_wrapper sllidar_ros2_driver_wrapper 

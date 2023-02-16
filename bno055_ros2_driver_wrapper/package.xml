@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>bno055_driver_wrapper</name>
+  <name>bno055_ros2_driver_wrapper</name>
   <version>1.0.0</version>
   <description>CARMA bno055 driver wrapper package</description>
   <maintainer email="carma@dot.gov">carma</maintainer>
@@ -14,8 +14,8 @@
   <depend>sensor_msgs</depend>
   <depend>rclcpp</depend>
   <depend>carma_ros2_utils</depend>
-  <depend>bno055</depend>
-
+  
+  <exec_depend>bno055</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
 

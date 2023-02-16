@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  * Copyright (C) 2021 LEIDOS.
  *
@@ -14,28 +16,29 @@
  * the License.
  */
 
-#pragma once
-
 #include <iostream>
 #include <vector>
 
-namespace bno055_driver_wrapper
+namespace bno055_ros2_driver_wrapper
 {
-    /**
-  * \brief Stuct containing the algorithm configuration values for the VelodyneLidarDriverWrapper
+     /**
+  * \brief Stuct containing the algorithm configuration values for the DriverWrapper
   */
 
-    struct Config
+    struct DriverWrapperConfig
     {
-        double point_cloud_timeout = 0.2;
+        double imu_timeout = 0.25;
+        int timer_callback = 500;
 
         // Stream operator for this config
-        friend std::ostream &operator<<(std::ostream &output, const Config &c)
+        friend std::ostream &operator<<(std::ostream &output, const DriverWrapperConfig &c)
         {
-            output << "bno055DriverWrapper::Config { "<<std::endl
-                   <<"point_cloud_timeout: "<<c.point_cloud_timeout<<std::endl;
+            output  << "DriverWrapperConfig { "<<std::endl
+                    <<"imu_timeout: "<< c.imu_timeout << std::endl
+                    <<"timer_callback: "<<c.timer_callback<<std::endl;
             
             return output;
         }
+
     };
-}//namespace bno055_driver_wrapper
+}  //namespace bno055_ros2_driver_wrapper
