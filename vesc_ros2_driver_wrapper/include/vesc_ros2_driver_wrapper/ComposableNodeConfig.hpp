@@ -18,11 +18,11 @@
 #include <iostream>
 #include <vector>
 
-namespace ssc_interface_wrapper
+namespace vesc_ros2_driver_wrapper
 {
 
   /**
-   * \brief Stuct containing the algorithm configuration values for ssc_interface_wrapper
+   * \brief Stuct containing the algorithm configuration values for vesc_ros2_driver_wrapper
    */
   struct Config
   {
@@ -32,11 +32,11 @@ namespace ssc_interface_wrapper
     // Stream operator for this config
     friend std::ostream &operator<<(std::ostream &output, const Config &c)
     {
-      output << "ssc_interface_wrapper::Config { " << std::endl
+      output << "vesc_ros2_driver_wrapper::Config { " << std::endl
            << "controller_timeout: "<< c.controller_timeout << std::endl
            << "}" << std::endl;
       return output;
     }
   };
 
-} // ssc_interface_wrapper
+} // vesc_ros2_driver_wrapper

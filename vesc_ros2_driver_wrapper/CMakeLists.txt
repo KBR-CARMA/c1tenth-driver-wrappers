@@ -1,4 +1,4 @@
-# Copyright (C) 2022 LEIDOS.
+# Copyright (C) 2021 LEIDOS.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(vesc_ros2_driver_wrapper)
 
-# Declare carma package and check ROS version
+# Get dependencies
 find_package(carma_cmake_common REQUIRED)
 carma_check_ros_version(2)
 carma_package()
@@ -24,58 +24,19 @@ carma_package()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-# Name build targets
-set(node_exec vesc_driver_wrapper_node_exec)
-set(node_lib vesc_driver_wrapper_node)
+# # Include
+# include_directories(include)
 
-# Includes
-include_directories(
-  include
-)
+# # Build and register the composable node
+# ament_auto_add_library(vesc_driver_wrapper_composable_node
+#   SHARED src/ComposableNode.cpp)
+# rclcpp_components_register_nodes(vesc_driver_wrapper_composable_node
+#   "vesc_ros2_driver_wrapper::ComposableNode")
 
-# Build
-ament_auto_add_library(${node_lib} SHARED
-        src/vesc_driver_wrapper_node.cpp
-        src/vesc_driver_wrapper_worker.cpp
-)
+# # Build regular node and link against the composable node
+# ament_auto_add_executable(vesc_driver_wrapper_node src/node.cpp)
+# target_link_libraries(vesc_driver_wrapper_node
+#   vesc_driver_wrapper_composable_node)
 
-ament_auto_add_executable(${node_exec} 
-        src/main.cpp 
-)
-
-# Register component
-rclcpp_components_register_nodes(${node_lib} "vesc_driver_wrapper::Node")
-
-# All locally created targets will need to be manually linked
-# ament auto will handle linking of external dependencies
-target_link_libraries(${node_exec}
-        ${node_lib}
-)
-
-ament_auto_add_library(converter_node SHARED
-        src/converter_worker.cpp)
-ament_auto_add_executable(converter_exec 
-                src/converter_node.cpp)        
-rclcpp_components_register_nodes(converter_node "vesc_driver_wrapper::Converter") 
-target_link_libraries(converter_exec
- converter_node
-)
-
-# Testing
-if(BUILD_TESTING)  
-
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies() # This populates the ${${PROJECT_NAME}_FOUND_TEST_DEPENDS} variable
-
-  ament_add_gtest(test_vesc_driver_wrapper test/node_test.cpp)
-
-  ament_target_dependencies(test_vesc_driver_wrapper ${${PROJECT_NAME}_FOUND_TEST_DEPENDS})
-
-  target_link_libraries(test_vesc_driver_wrapper ${node_lib})
-
-endif()
-
-# Install
-ament_auto_package(
-        INSTALL_TO_SHARE config launch
-)
+# Install parameters and launch files
+ament_auto_package(INSTALL_TO_SHARE config launch)

@@ -22,8 +22,8 @@
 #include <std_srvs/srv/empty.hpp>
 #include <carma_ros2_utils/carma_lifecycle_node.hpp>
 
-#include "vesc_driver_wrapper/vesc_driver_wrapper_config.hpp"
-#include "vesc_driver_wrapper/vesc_driver_wrapper_worker.hpp"
+#include "ssc_interface_wrapper/ssc_interface_wrapper_config.hpp"
+#include "ssc_interface_wrapper/ssc_interface_wrapper_worker.hpp"
 
 #include <automotive_navigation_msgs/msg/module_state.hpp>
 #include <j2735_v2x_msgs/msg/transmission_state.hpp>
@@ -35,7 +35,7 @@
 #include <carma_driver_msgs/srv/set_enable_robotic.hpp>
 
 
-namespace ssc_interface_wrapper
+namespace vesc_ros2_driver_wrapper
 {
     class Node : public carma_ros2_utils::CarmaLifecycleNode
     {
