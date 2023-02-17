@@ -24,7 +24,7 @@ def generate_launch_description():
     name = 'composable', default_value='false', description='Should we launch a composable node')
 
   # Note that the name must match the param file.
-  sllidar_node = Node(
+  driver_node = Node(
     package='sllidar_ros2',
     executable='sllidar_node',
     name='sllidar_node',
