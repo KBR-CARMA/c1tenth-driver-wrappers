@@ -27,6 +27,10 @@ git clone --depth=1 https://github.com/KBR-CARMA/transport_drivers.git --branch 
 
 # Check out all the drivers
 git clone --depth=1 https://github.com/KBR-CARMA/vesc.git --branch c1tenth-develop
-git clone --depth=1 https://github.com/KBR-CARMA/bno055.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/sllidar_ros2.git --branch c1tenth-develop
 git clone --depth=1 https://github.com/KBR-CARMA/dwm1001_ros2.git --branch c1tenth-develop
+
+# TODO(asymingt) - fix the IMU problem from a recent commit.
+git clone https://github.com/KBR-CARMA/bno055.git --branch c1tenth-develop
+cd bno055
+git checkout -b tmp b2eeb34413ddd77e57020b22875dbd3bedfacfb9
