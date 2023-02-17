@@ -21,15 +21,14 @@
 #include <rclcpp/rclcpp.hpp>
 
 // Driver includes
-#include "bno055_ros2_driver_wrapper/DriverWrapper.hpp"
+#include "bno055_ros2_driver_wrapper/ComposableNode.hpp"
 
 int main(int argc, char *argv[]) {
-
     // Initialize ROS2 for this context
     rclcpp::init(argc, argv);
 
     // Create a new Node
-    auto node = std::make_shared<bno055_ros2_driver_wrapper::DriverWrapper>(rclcpp::NodeOptions());
+    auto node = std::make_shared<bno055_ros2_driver_wrapper::ComposableNode>(rclcpp::NodeOptions());
 
     // We use the multi threaded executor here to support the rentrent callbacks of the ros2_lifecycle_manager
     rclcpp::executors::MultiThreadedExecutor executor;    

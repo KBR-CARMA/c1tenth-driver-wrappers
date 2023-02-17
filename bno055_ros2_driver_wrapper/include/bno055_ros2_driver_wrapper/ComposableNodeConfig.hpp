@@ -22,18 +22,18 @@
 namespace bno055_ros2_driver_wrapper
 {
      /**
-  * \brief Stuct containing the algorithm configuration values for the DriverWrapper
+  * \brief Stuct containing the algorithm configuration values for the ComposableNode
   */
 
-    struct DriverWrapperConfig
+    struct ComposableNodeConfig
     {
         double imu_timeout = 0.25;
         int timer_callback = 500;
 
         // Stream operator for this config
-        friend std::ostream &operator<<(std::ostream &output, const DriverWrapperConfig &c)
+        friend std::ostream &operator<<(std::ostream &output, const ComposableNodeConfig &c)
         {
-            output  << "DriverWrapperConfig { "<<std::endl
+            output  << "ComposableNodeConfig { "<<std::endl
                     <<"imu_timeout: "<< c.imu_timeout << std::endl
                     <<"timer_callback: "<<c.timer_callback<<std::endl;
             

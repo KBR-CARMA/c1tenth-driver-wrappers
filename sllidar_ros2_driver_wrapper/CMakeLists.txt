@@ -23,31 +23,24 @@ carma_package()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-# Name build targets
-set(node_exec sllidar_ros2_driver_wrapper_node_exec)
-set(node_lib sllidar_ros2_driver_wrapper_node)
+# Includedirectories
+include_directories(include)
 
-# Includes
-include_directories(
-  include
-)
+# Build the composable node
+ament_auto_add_library(sllidar_driver_wrapper_composable_node SHARED
+  src/ComposableNode.cpp)
 
-# Build
-ament_auto_add_library(${node_lib} SHARED
-  src/sllidar_ros2_driver_wrapper.cpp
-)
-
-ament_auto_add_executable(${node_exec} 
-        src/main.cpp)
+# Build the resula rnode
+ament_auto_add_executable(sllidar_driver_wrapper_node
+  src/node.cpp)
 
 # Register component
-rclcpp_components_register_nodes(${node_lib} "sllidar_ros2_driver_wrapper::Node")
+rclcpp_components_register_nodes(sllidar_driver_wrapper_composable_node
+  "sllidar_ros2_driver_wrapper::ComposableNode")
 
-target_link_libraries( ${node_exec} 
-          ${node_lib}
-)
+target_link_libraries(sllidar_driver_wrapper_node
+  sllidar_driver_wrapper_composable_node)
 
-#Install
-ament_auto_package(
-  INSTALL_TO_SHARE config launch
-)
+
+# Install products other than libraries, headers and executables
+ament_auto_package(INSTALL_TO_SHARE config launch)

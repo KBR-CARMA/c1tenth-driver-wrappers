@@ -27,20 +27,20 @@
 #include <carma_ros2_utils/carma_lifecycle_node.hpp>
 
 // This project includes
-#include "bno055_ros2_driver_wrapper/DriverWrapperConfig.hpp"
+#include "bno055_ros2_driver_wrapper/ComposableNodeConfig.hpp"
 
 namespace bno055_ros2_driver_wrapper
 {
-  class DriverWrapper : public carma_ros2_utils::CarmaLifecycleNode {
+  class ComposableNode : public carma_ros2_utils::CarmaLifecycleNode {
   public:
 
-    DriverWrapper() = delete;
+    ComposableNode() = delete;
 
     // Constructor
-    explicit DriverWrapper(const rclcpp::NodeOptions &options);
+    explicit ComposableNode(const rclcpp::NodeOptions &options);
 
     // Default destructore
-    ~DriverWrapper() = default;    
+    ~ComposableNode() = default;    
 
     // Lifycle state machine callback
     carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
@@ -51,11 +51,11 @@ namespace bno055_ros2_driver_wrapper
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
 
     // Wrapper configuration
-    DriverWrapperConfig config_;
+    ComposableNodeConfig config_;
 
     // Callbacks
     void imu_callback(const sensor_msgs::msg::Imu::UniquePtr msg);
-    void timerCallback();
+    void timer_callback();
 
     rclcpp::Time last_imu_msg_;
     rclcpp::TimerBase::SharedPtr timer_;

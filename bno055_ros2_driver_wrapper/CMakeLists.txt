@@ -29,9 +29,9 @@ include_directories(include)
 
 # Build and register the composable node
 ament_auto_add_library(bno055_driver_wrapper_composable_node
-  SHARED src/DriverWrapper.cpp)
+  SHARED src/ComposableNode.cpp)
 rclcpp_components_register_nodes(bno055_driver_wrapper_composable_node
-  "bno055_ros2_driver_wrapper::DriverWrapper")
+  "bno055_ros2_driver_wrapper::ComposableNode")
 
 # Build regular node and link against the composable node
 ament_auto_add_executable(bno055_driver_wrapper_node src/node.cpp)

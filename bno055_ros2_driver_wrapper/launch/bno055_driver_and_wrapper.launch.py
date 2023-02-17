@@ -11,8 +11,11 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
-PARAM_FILE = os.path.join(
+DRIVER_PARAM_FILE = os.path.join(
   get_package_share_directory('bno055_ros2_driver_wrapper'), 'config', 'bno055_driver.params.yaml')
+
+WRAPPER_PARAM_FILE = os.path.join(
+  get_package_share_directory('bno055_ros2_driver_wrapper'), 'config', 'bno055_wrapper.params.yaml')
 
 def generate_launch_description():
 
@@ -25,7 +28,7 @@ def generate_launch_description():
           name='bno055',
           package='bno055',
           executable='bno055',
-          parameters=[PARAM_FILE],
+          parameters=[DRIVER_PARAM_FILE],
           output='screen'
       )
 
@@ -34,6 +37,7 @@ def generate_launch_description():
           name='bno055_driver_wrapper_node',
           package='bno055_ros2_driver_wrapper',
           executable='bno055_driver_wrapper_node',
+          parameters=[WRAPPER_PARAM_FILE],
           namespace='bno055',
           output='screen',
           condition=UnlessCondition(LaunchConfiguration("composable"))
@@ -50,7 +54,8 @@ def generate_launch_description():
               ComposableNode(
                   name='bno055_ros2_driver_wrapper_composable_node',
                   package='bno055_ros2_driver_wrapper',
-                  plugin='bno055_ros2_driver_wrapper::DriverWrapper',
+                  plugin='bno055_ros2_driver_wrapper::ComposableNode',
+                  parameters=[WRAPPER_PARAM_FILE],
                   extra_arguments=[{'use_intra_process_comms': True}],
               )
           ]

@@ -15,46 +15,48 @@
  */
 
 #include <memory>
-#include "sllidar_ros2_driver_wrapper/sllidar_ros2_driver_wrapper.hpp"
+#include "sllidar_ros2_driver_wrapper/ComposableNode.hpp"
 
 namespace sllidar_ros2_driver_wrapper
 {
-    Node::Node(const rclcpp::NodeOptions &options)
+    ComposableNode::ComposableNode(const rclcpp::NodeOptions &options)
         : CarmaLifecycleNode(options)
     {
-        config_ = Config();
-        //Load Parameters
+        // Init config
+        config_ = ComposableNodeConfig();
         config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+        config_.timer_callback = this->declare_parameter<int>("timer_callback", config_.timer_callback);
     }
 
-    void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
+    void ComposableNode::point_cloud_callback(
+        [[maybe_unused]] const sensor_msgs::msg::PointCloud2::UniquePtr msg)
     {
         last_update_time_ = this->now();
-
     }
 
-    carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
+    carma_ros2_utils::CallbackReturn ComposableNode::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
     {
         RCLCPP_INFO_STREAM(this->get_logger(), "Sllidar Driver wrapper trying to configure");
 
-        config_ = Config();
-        //Load Parameters
+        // Load config
+        config_ = ComposableNodeConfig();
         this->get_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+        this->get_parameter<int>("timer_callback", config_.timer_callback);
 
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
 
-        //Add subscriber(s)
+        // Add subscriber(s)
         point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("lidar/points_raw", 1,
-            std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
+            std::bind(&ComposableNode::point_cloud_callback, this, std::placeholders::_1));
         
         return CallbackReturn::SUCCESS;
     }
 
-    carma_ros2_utils::CallbackReturn Node::handle_on_activate(const rclcpp_lifecycle::State &prev_state)
+    carma_ros2_utils::CallbackReturn ComposableNode::handle_on_activate(const rclcpp_lifecycle::State &prev_state)
     {
-        //Timer setup
+        // Timer setup
         timer_ = this->create_wall_timer(std::chrono::milliseconds(500), 
-        std::bind(&Node::check_lidar_timeout, this));
+        std::bind(&ComposableNode::timer_callback, this));
 
         //Initialize timeout check
         last_update_time_ = this->now();
@@ -62,7 +64,7 @@ namespace sllidar_ros2_driver_wrapper
         return CallbackReturn::SUCCESS;
     }
 
-    void Node::check_lidar_timeout(){
+    void ComposableNode::timer_callback(){
         
         rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
 
@@ -75,4 +77,4 @@ namespace sllidar_ros2_driver_wrapper
 #include "rclcpp_components/register_node_macro.hpp"
 
 // Register the component with class_loader
-RCLCPP_COMPONENTS_REGISTER_NODE(sllidar_ros2_driver_wrapper::Node)
+RCLCPP_COMPONENTS_REGISTER_NODE(sllidar_ros2_driver_wrapper::ComposableNode)
