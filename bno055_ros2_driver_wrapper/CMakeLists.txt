@@ -13,8 +13,9 @@
 # the License.
 
 cmake_minimum_required(VERSION 3.5)
-project(bno055_driver_wrapper)
+project(bno055_ros2_driver_wrapper)
 
+# Get dependencies
 find_package(carma_cmake_common REQUIRED)
 carma_check_ros_version(2)
 carma_package()
@@ -23,31 +24,19 @@ carma_package()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-# Name build targets
-set(node_exec bno055_driver_wrapper_node_exec)
-set(node_lib bno055_driver_wrapper_node)
+# Include
+include_directories(include)
 
-# Includes
-include_directories(
-  include
-)
+# Build and register the composable node
+ament_auto_add_library(bno055_driver_wrapper_composable_node
+  SHARED src/ComposableNode.cpp)
+rclcpp_components_register_nodes(bno055_driver_wrapper_composable_node
+  "bno055_ros2_driver_wrapper::ComposableNode")
 
-# Build
-ament_auto_add_library(${node_lib} SHARED
-  src/bno055_driver_wrapper.cpp
-)
+# Build regular node and link against the composable node
+ament_auto_add_executable(bno055_driver_wrapper_node src/node.cpp)
+target_link_libraries(bno055_driver_wrapper_node
+  bno055_driver_wrapper_composable_node)
 
-ament_auto_add_executable(${node_exec} 
-        src/main.cpp)
-
-# Register component
-rclcpp_components_register_nodes(${node_lib} "bno055_driver_wrapper::Node")
-
-target_link_libraries( ${node_exec} 
-          ${node_lib}
-)
-
-#Install
-ament_auto_package(
-  INSTALL_TO_SHARE config launch
-)
+# Install parameters and launch files
+ament_auto_package(INSTALL_TO_SHARE config launch)

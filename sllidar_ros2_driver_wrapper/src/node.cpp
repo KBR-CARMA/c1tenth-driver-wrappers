@@ -15,21 +15,21 @@
  */
 #include <memory>
 
-#include "sllidar_ros2_driver_wrapper/sllidar_ros2_driver_wrapper.hpp"
+#include "sllidar_ros2_driver_wrapper/ComposableNode.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-int main(int argc, char ** argv)
-{
-    rclcpp::init(argc,argv);
+int main(int argc, char ** argv) {
+    // Initialize ROS2 for this context
+    rclcpp::init(argc, argv);
 
-    auto node = std::make_shared<sllidar_ros2_driver_wrapper::Node>(rclcpp::NodeOptions());
+    // Create a new Node
+    auto node = std::make_shared<sllidar_ros2_driver_wrapper::ComposableNode>(rclcpp::NodeOptions());
 
     // We use the multi threaded executor here to support the rentrent callbacks of the ros2_lifecycle_manager
-    rclcpp::executors::MultiThreadedExecutor executor;
-    
+    rclcpp::executors::MultiThreadedExecutor executor;    
     executor.add_node(node->get_node_base_interface());
-    executor.spin();
+    executor.spin();  // blocking until shutdown
 
+    // Shut down ROS2
     rclcpp::shutdown();
-
 }

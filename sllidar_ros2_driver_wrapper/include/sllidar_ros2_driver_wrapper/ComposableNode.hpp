@@ -15,42 +15,40 @@
  */
 #pragma once
 
-#include "carma_ros2_utils/carma_lifecycle_node.hpp"
+// ROS2 message includes
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include "bno055_driver_wrapper/bno055_driver_wrapper_config.hpp"
 
-namespace bno055_driver_wrapper
+// CARMA includes
+#include <carma_ros2_utils/carma_lifecycle_node.hpp>
+
+// This projetc includes
+#include "sllidar_ros2_driver_wrapper/ComposableNodeConfig.hpp"
+
+namespace sllidar_ros2_driver_wrapper
 {
-    class Node : public carma_ros2_utils::CarmaLifecycleNode
+    class ComposableNode : public carma_ros2_utils::CarmaLifecycleNode
     {
-        public:
-        
-        Node() = delete;
+    public:
+        // Delete the default destructor and explicitly add one.        
+        ComposableNode() = delete;
+        explicit ComposableNode(const rclcpp::NodeOptions &options);
 
-        /**
-         * \brief Constructor. Set explicitly to support node composition.
-         * 
-         * \param options The node options to use for configuring this node
-        */
-       explicit Node(const rclcpp::NodeOptions &options);
+        // Use the default destructor
+        ~ComposableNode() = default;
 
-       ~Node() = default;
-
-        ////
-        // Overrides
-        ///
+        // Implement callbacks for the lifecycle management
         carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
         carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state);
         
-        private:
+    private:
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;
         rclcpp::Time last_update_time_;
         double point_cloud_timeout_;
 
-        void point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg);
-        void check_lidar_timeout();
+        void point_cloud_callback(const sensor_msgs::msg::PointCloud2::UniquePtr msg);
+        void timer_callback();
 
-        Config config_;
+        ComposableNodeConfig config_;
         rclcpp::TimerBase::SharedPtr timer_;
     };
 }
