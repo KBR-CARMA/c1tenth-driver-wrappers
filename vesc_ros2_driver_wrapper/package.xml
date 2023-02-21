@@ -15,6 +15,7 @@
   <depend>carma_ros2_utils</depend>
   <depend>vesc_ackermann</depend>
   <depend>vesc_driver</depend>
+  <exec_depend>vesc_interface</exec_depend>
 
   <depend>autoware_msgs</depend>
   <depend>carma_driver_msgs</depend>

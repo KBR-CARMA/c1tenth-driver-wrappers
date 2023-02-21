@@ -8,7 +8,7 @@
       # Triggers go from 1.0 (when in neutral position) to -1.0 (when fully squeezed)
       # brake: 2  # Left trigger
       # throttle: 5  # Right trigger
-      front_steer: 3  # Left joystick, x direction
+      front_steer: 2  # Right joystick, x direction
       # rear_steer: 3  # Right joystick, x direction
       # curvature:
       acceleration: 1  # Left joystick, y direction

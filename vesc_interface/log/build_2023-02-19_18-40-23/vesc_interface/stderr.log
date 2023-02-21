@@ -1,0 +1,10 @@
+In file included from [01m[K/home/carma/c1tenth-driver-wrappers/vesc_interface/include/vesc_interface/vesc_interface.hpp:27[m[K,
+                 from [01m[K/home/carma/c1tenth-driver-wrappers/vesc_interface/src/vesc_interface.cpp:15[m[K:
+[01m[K/opt/autoware.ai/ros/install_ros2/vehicle_interface/include/vehicle_interface/platform_interface.hpp:22:10:[m[K [01;31m[Kfatal error: [m[Kautoware_auto_msgs/msg/headlights_command.hpp: No such file or directory
+   22 | #include [01;31m[K<autoware_auto_msgs/msg/headlights_command.hpp>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.
+make[2]: *** [CMakeFiles/vesc_interface.dir/build.make:63: CMakeFiles/vesc_interface.dir/src/vesc_interface.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:215: CMakeFiles/vesc_interface.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:141: all] Error 2

@@ -14,6 +14,9 @@ from launch_ros.descriptions import ComposableNode
 VESC_DRIVER_PARAM_FILE = os.path.join(
   get_package_share_directory('vesc_ros2_driver_wrapper'), 'config', 'vesc.params.yaml')
 
+VESC_INTERFACE_PARAM_FILE = os.path.join(
+  get_package_share_directory('vesc_ros2_driver_wrapper'), 'config', 'vesc_config.params.yaml')
+
 ODOM_DRIVER_PARAM_FILE = os.path.join(
   get_package_share_directory('vesc_ros2_driver_wrapper'), 'config', 'vesc_to_odom_node.params.yaml')
 
@@ -45,6 +48,14 @@ def generate_launch_description():
       namespace='vehicle',
       output='screen',
       parameters=[VESC_DRIVER_PARAM_FILE]
+  )
+
+  vesc_interface_node = Node(
+      package='vesc_interface',
+      executable='vesc_interface_node_exe',
+      namespace='vehicle',
+      output='screen',
+      parameters=[VESC_INTERFACE_PARAM_FILE]
   )
 
   vesc_to_odom_launcher = Node(
@@ -113,6 +124,7 @@ def generate_launch_description():
         composable,
         with_joy,
         vesc_driver_launcher,
+        vesc_interface_node,
         vesc_to_odom_launcher,
         joy,
         joy_translator,

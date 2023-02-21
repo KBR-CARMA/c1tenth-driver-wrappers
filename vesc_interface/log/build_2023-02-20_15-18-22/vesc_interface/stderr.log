@@ -1,0 +1,15 @@
+CMake Error: The current CMakeCache.txt directory /home/carma/tmp_ws/src/vesc_interface/build/vesc_interface/CMakeCache.txt is different than the directory /home/carma/c1tenth-driver-wrappers/vesc_interface/build/vesc_interface where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt
+/bin/sh: 1: cd: can't cd to /home/carma/c1tenth-driver-wrappers/vesc_interface/build/vesc_interface
+make[2]: *** [gtest/CMakeFiles/gtest_main.dir/build.make:97: gtest/CMakeFiles/gtest_main.dir/depend] Error 2
+make[1]: *** [CMakeFiles/Makefile2:268: gtest/CMakeFiles/gtest_main.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+/bin/sh: 1: cd: can't cd to /home/carma/c1tenth-driver-wrappers/vesc_interface/build/vesc_interface
+make[2]: *** [gtest/CMakeFiles/gtest.dir/build.make:97: gtest/CMakeFiles/gtest.dir/depend] Error 2
+make[1]: *** [CMakeFiles/Makefile2:295: gtest/CMakeFiles/gtest.dir/all] Error 2
+/bin/sh: 1: cd: can't cd to /home/carma/c1tenth-driver-wrappers/vesc_interface/build/vesc_interface
+make[2]: *** [CMakeFiles/vesc_interface.dir/build.make:167: CMakeFiles/vesc_interface.dir/depend] Error 2
+make[1]: *** [CMakeFiles/Makefile2:214: CMakeFiles/vesc_interface.dir/all] Error 2
+/bin/sh: 1: cd: can't cd to /home/carma/c1tenth-driver-wrappers/vesc_interface/build/vesc_interface
+make[2]: *** [CMakeFiles/vesc_interface_node_exe.dir/build.make:152: CMakeFiles/vesc_interface_node_exe.dir/depend] Error 2
+make[1]: *** [CMakeFiles/Makefile2:133: CMakeFiles/vesc_interface_node_exe.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

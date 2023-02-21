@@ -1,0 +1,4 @@
+[ 16%] Built target gtest
+[ 50%] Built target vesc_interface_node_exe
+[ 33%] Built target gtest_main
+[ 58%] [32mBuilding CXX object CMakeFiles/vesc_interface.dir/src/vesc_interface.cpp.o[0m

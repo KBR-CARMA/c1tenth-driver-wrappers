@@ -1,0 +1,16 @@
+In file included from [01m[K/home/carma/tmp_ws/src/vesc_interface/include/vesc_interface/vesc_interface.hpp:27[m[K,
+                 from [01m[K/home/carma/tmp_ws/src/vesc_interface/src/vesc_interface.cpp:15[m[K:
+[01m[K/opt/autoware.ai/ros/install_ros2/vehicle_interface/include/vehicle_interface/platform_interface.hpp:22:10:[m[K [01;31m[Kfatal error: [m[Kautoware_auto_msgs/msg/headlights_command.hpp: No such file or directory
+   22 | #include [01;31m[K<autoware_auto_msgs/msg/headlights_command.hpp>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.
+make[2]: *** [CMakeFiles/vesc_interface.dir/build.make:63: CMakeFiles/vesc_interface.dir/src/vesc_interface.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:215: CMakeFiles/vesc_interface.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/vesc_interface_node_exe.dir/build.make:63: CMakeFiles/vesc_interface_node_exe.dir/rclcpp_components/node_main_vesc_interface_node_exe.cpp.o] Interrupt
+make[1]: *** [CMakeFiles/Makefile2:134: CMakeFiles/vesc_interface_node_exe.dir/all] Interrupt
+make[2]: *** [gtest/CMakeFiles/gtest_main.dir/build.make:63: gtest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o] Interrupt
+make[2]: *** [gtest/CMakeFiles/gtest.dir/build.make:63: gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o] Interrupt
+make[1]: *** [CMakeFiles/Makefile2:269: gtest/CMakeFiles/gtest_main.dir/all] Interrupt
+make[1]: *** [CMakeFiles/Makefile2:296: gtest/CMakeFiles/gtest.dir/all] Interrupt
+make: *** [Makefile:141: all] Interrupt
