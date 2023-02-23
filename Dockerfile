@@ -16,7 +16,6 @@ FROM usdotfhwastol/carma-platform:c1tenth-develop
 
 # Make sure 'carma' user has the correct permissions to open devices.
 RUN sudo usermod -aG dialout,plugdev carma
-RUN sudo apt-get update && sudo apt-get install -y ros-foxy-ackermann-msgs
 
 ARG ROS1_PACKAGES=""
 ENV ROS1_PACKAGES=${ROS1_PACKAGES}

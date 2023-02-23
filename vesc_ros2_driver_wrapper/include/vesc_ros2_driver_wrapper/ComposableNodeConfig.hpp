@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * Copyright (C) 2022 LEIDOS.
+ * Copyright (C) 2021 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,28 +15,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 #include <iostream>
 #include <vector>
 
 namespace vesc_ros2_driver_wrapper
 {
+     /**
+  * \brief Stuct containing the algorithm configuration values for the ComposableNode
+  */
 
-  /**
-   * \brief Stuct containing the algorithm configuration values for vesc_ros2_driver_wrapper
-   */
-  struct Config
-  {
-    // Timeout for command receipt in seconds
-    double controller_timeout = 1;
-
-    // Stream operator for this config
-    friend std::ostream &operator<<(std::ostream &output, const Config &c)
+    struct ComposableNodeConfig
     {
-      output << "vesc_ros2_driver_wrapper::Config { " << std::endl
-           << "controller_timeout: "<< c.controller_timeout << std::endl
-           << "}" << std::endl;
-      return output;
-    }
-  };
+        double vesc_state_timeout = 0.25;
+        double vesc_servo_timeout = 0.25;
+        int timer_callback = 500;
+        double wheelbase = 0.3175;
+        double speed_to_erpm_gain = -4221.0;
+        double speed_to_erpm_offset = 0.0;
+        double steering_to_servo_gain = -0.9135;
+        double steering_to_servo_offset = 0.5304;
+        double max_erpm_positive_delta = 500.0;
+        double max_erpm_negative_delta = 1000.0;
 
-} // vesc_ros2_driver_wrapper
+        // Stream operator for this config
+        friend std::ostream &operator<<(std::ostream &output, const ComposableNodeConfig &c)
+        {
+            output  << "ComposableNodeConfig { " << std::endl
+                    << "vesc_state_timeout: " << c.vesc_state_timeout << std::endl
+                    << "vesc_servo_timeout: " << c.vesc_servo_timeout << std::endl
+                    << "timer_callback: " << c.timer_callback << std::endl
+                    << "wheelbase: " << c.wheelbase << std::endl
+                    << "speed_to_erpm_gain: " << c.speed_to_erpm_gain << std::endl
+                    << "speed_to_erpm_offset: " << c.speed_to_erpm_offset << std::endl
+                    << "steering_to_servo_gain: " << c.steering_to_servo_gain << std::endl
+                    << "steering_to_servo_offset: " << c.steering_to_servo_offset << std::endl                    
+                    << "max_erpm_positive_delta: " << c.max_erpm_positive_delta << std::endl
+                    << "max_erpm_negative_delta: " << c.max_erpm_negative_delta << std::endl;
+            return output;
+        }
+
+    };
+}  //namespace vesc_ros2_driver_wrapper
