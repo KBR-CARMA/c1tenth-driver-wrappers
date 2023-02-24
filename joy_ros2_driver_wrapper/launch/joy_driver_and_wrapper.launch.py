@@ -23,8 +23,8 @@ def generate_launch_description():
   composable = DeclareLaunchArgument(
     name = 'composable', default_value='false', description='Should we launch a composable node')
 
-  # This node connects to /dev/input/js0 and translates the jostick commands
-  # to a more universal message sensor_msgs::Joy.
+  # Publishes:
+  # + joy                             (sensor_msgs::msg::Joy)
   joy = Node(
       package='joy_linux',
       executable='joy_linux_node',
@@ -32,7 +32,11 @@ def generate_launch_description():
       parameters=[DRIVER_PARAM_FILE]
   )
 
-  # If we want a regular node (composable:=false) then this is run.
+  # Subscribes to:
+  # + joy                             (sensor_msgs::msg::Joy)
+  # Publishes:
+  # + vehicle_cmd                     (autoware_msgs::msg::VehicleCmd)
+  # + vehicle/engage                  (std_msgs::msg::Bool)
   wrapper_node = Node(
           name='joy_driver_wrapper_node',
           package='joy_ros2_driver_wrapper',
@@ -42,8 +46,6 @@ def generate_launch_description():
           output='screen',
           condition=UnlessCondition(LaunchConfiguration("composable"))
       )
-
-  # If we want a composable node (composable:=true) then this is run.
   wrapper_composable_node = ComposableNodeContainer(
           name='joy_ros2_driver_wrapper_container',
           package='carma_ros2_utils',

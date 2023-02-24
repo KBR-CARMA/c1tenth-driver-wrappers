@@ -29,7 +29,7 @@ include_directories(include)
 
 # Build and register the composable node
 ament_auto_add_library(joy_driver_wrapper_composable_node
-  SHARED src/JoystickVehicleInterface.cpp src/ComposableNode.cpp)
+  SHARED src/ComposableNode.cpp)
 rclcpp_components_register_nodes(joy_driver_wrapper_composable_node
   "joy_ros2_driver_wrapper::ComposableNode")
 

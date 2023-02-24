@@ -20,69 +20,54 @@
 #include <rclcpp/rclcpp.hpp>
 
 // Message includes
+#include <autoware_msgs/msg/vehicle_cmd.hpp>
 #include <sensor_msgs/msg/joy.hpp>
+#include <std_msgs/msg/bool.hpp>
 
+// CARMA includes
+#include <carma_msgs/msg/system_alert.hpp>
+#include <carma_ros2_utils/carma_lifecycle_node.hpp>
 
-namespace joy_ros2_driver_wrapper {
+// This project includes
+#include "joy_ros2_driver_wrapper/ComposableNodeConfig.hpp"
 
-/// A node which translates sensor_msgs/msg/Joy messages into messages compatible with the vehicle
-/// interface. All participants use SensorDataQoS
-class ComposableNode : public rclcpp::Node {
-public:
-  /// ROS 2 parameter constructor
-  explicit ComposableNode(const rclcpp::NodeOptions & node_options);
+namespace joy_ros2_driver_wrapper
+{
+  class ComposableNode : public carma_ros2_utils::CarmaLifecycleNode {
+  public:
 
-private:
-  std::unique_ptr<joystick_vehicle_interface::JoystickVehicleInterface> m_core;
-  void init(
-    const std::string & control_command,
-    const std::string & state_command_topic,
-    const std::string & joy_topic,
-    const bool8_t & recordreplay_command_enabled,
-    const AxisMap & axis_map,
-    const AxisScaleMap & axis_scale_map,
-    const AxisScaleMap & axis_offset_map,
-    const ButtonMap & button_map);
+    ComposableNode() = delete;
 
-  /// Callback for joystick subscription: compute control and state command and publish
-  void on_joy(const sensor_msgs::msg::Joy::SharedPtr msg);
-  template<typename T>
-  void on_auto_cmd(const typename T::SharedPtr msg)
-  {
-    if (m_core->is_autonomous_mode_on()) {
-      const auto pub_ctr_cmd = [this, &msg](auto && pub) -> void {
-          using MessageT =
-            typename std::decay_t<decltype(pub)>::element_type::MessageUniquePtr::element_type::
-            SharedPtr;
-          auto cmd = **reinterpret_cast<const MessageT *>(&msg);
-          cmd.stamp = now();
-          pub->publish(cmd);
-        };
-      mpark::visit(pub_ctr_cmd, m_cmd_pub);
-    }
-  }
+    // Constructor
+    explicit ComposableNode(const rclcpp::NodeOptions &options);
 
-  using HighLevelControl = autoware_auto_control_msgs::msg::HighLevelControlCommand;
-  using BasicControl = autoware_auto_vehicle_msgs::msg::VehicleControlCommand;
-  using RawControl = autoware_auto_vehicle_msgs::msg::RawControlCommand;
-  template<typename T>
-  using PubT = typename rclcpp::Publisher<T>::SharedPtr;
-  template<typename T>
-  using SubT = typename rclcpp::Subscription<T>::SharedPtr;
+    // Default destructore
+    ~ComposableNode() = default;    
 
-  using ControlPub = mpark::variant<PubT<RawControl>, PubT<BasicControl>, PubT<HighLevelControl>>;
-  using ControlSub = mpark::variant<SubT<RawControl>, SubT<BasicControl>, SubT<HighLevelControl>>;
+  private:
+    // Lifycle state machine callback
+    carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
+    carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state);
 
-  ControlPub m_cmd_pub{};
+    // Subscribers
+    rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
 
-  // input autonomous cmd for switching manual/auto mode at a button press
-  // TODO(haoru): a seperate multiplexer will be developed in Autoware Universe
-  ControlSub m_auto_cmd_sub{};
+    // Publishers
+    rclcpp::Publisher<autoware_msgs::msg::VehicleCmd>::SharedPtr vehicle_cmd_pub_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr engage_pub_;
 
-  rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::VehicleStateCommand>::SharedPtr m_state_cmd_pub{};
-  rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::HeadlightsCommand>::SharedPtr m_headlights_cmd_pub{};
-  rclcpp::Publisher<std_msgs::msg::UInt8>::SharedPtr m_recordreplay_cmd_pub{};
-  rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr m_joy_sub{nullptr};
-};
+    // Configuration
+    ComposableNodeConfig config_;
+
+    // Callbacks
+    void joy_callback(const sensor_msgs::msg::Joy::UniquePtr msg);
+    void timer_callback();
+
+    // Variables
+    bool enabled_ = false;
+    rclcpp::Time last_joy_time_;
+    rclcpp::Time last_enabled_time_;
+    rclcpp::TimerBase::SharedPtr timer_;
+  };
 
 } // namespace joy_ros2_driver_wrapper
