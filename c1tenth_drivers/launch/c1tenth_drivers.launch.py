@@ -11,21 +11,53 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
-DRIVER_PARAM_FILE = os.path.join(
-  get_package_share_directory('vesc_ros2_driver_wrapper'), 'config', 'vesc_driver.params.yaml')
+# BNO055_DRIVER_PARAM_FILE = os.path.join(
+#   get_package_share_directory('c1tenth_drivers'), 'config', 'bno055_driver.params.yaml')
+# BNO055_WRAPPER_PARAM_FILE = os.path.join(
+#   get_package_share_directory('c1tenth_drivers'), 'config', 'bno055_wrapper.params.yaml')
 
-WRAPPER_PARAM_FILE = os.path.join(
-  get_package_share_directory('vesc_ros2_driver_wrapper'), 'config', 'vesc_wrapper.params.yaml')
+# SLLIDAR_DRIVER_PARAM_FILE = os.path.join(
+#   get_package_share_directory('c1tenth_drivers'), 'config', 'sllidar_driver.params.yaml')
+# SLLIDAR_WRAPPER_PARAM_FILE = os.path.join(
+#   get_package_share_directory('c1tenth_drivers'), 'config', 'sllidar_wrapper.params.yaml')
 
+JOY_DRIVER_PARAM_FILE = os.path.join(
+  get_package_share_directory('c1tenth_drivers'), 'config', 'joy_driver.params.yaml')
+JOY_WRAPPER_PARAM_FILE = os.path.join(
+  get_package_share_directory('c1tenth_drivers'), 'config', 'joy_wrapper.params.yaml')
+
+VESC_DRIVER_PARAM_FILE = os.path.join(
+  get_package_share_directory('c1tenth_drivers'), 'config', 'vesc_driver.params.yaml')
+VESC_WRAPPER_PARAM_FILE = os.path.join(
+  get_package_share_directory('c1tenth_drivers'), 'config', 'vesc_wrapper.params.yaml')
 
 def generate_launch_description():
 
-  # Arguments to this launch file.
+  ############# JOY
 
-  composable = DeclareLaunchArgument(
-    name = 'composable', default_value='false', description='Should we launch a composable node')
+  # Publishes:
+  # + joy                             (sensor_msgs::msg::Joy)
+  joy_driver_node = Node(
+      package='joy_linux',
+      executable='joy_linux_node',
+      output='screen',
+      parameters=[JOY_DRIVER_PARAM_FILE]
+  )
 
-  # Note that the name must match the param file.
+  # Subscribes to:
+  # + joy                             (sensor_msgs::msg::Joy)
+  # Publishes:
+  # + vehicle_cmd                     (autoware_msgs::msg::VehicleCmd)
+  # + vehicle/engage                  (std_msgs::msg::Bool)
+  joy_wrapper_node = Node(
+          name='joy_driver_wrapper_node',
+          package='joy_ros2_driver_wrapper',
+          executable='joy_driver_wrapper_node',
+          parameters=[JOY_WRAPPER_PARAM_FILE],
+          output='screen',
+      )
+
+  ############# VESC
     
   # Subscribes to:
   # + commands/motor/duty_cycle        (std_msgs::msg::Float64)
@@ -39,13 +71,12 @@ def generate_launch_description():
   # + sensors/imu                     (vesc_msgs::msg::VescImuStamped)
   # + sensors/imu/raw                 (sensor_msgs::msg::Imu)
   # + sensors/servo_position_command  (std_msgs::msg::Float64)
-  driver_node = Node(
+  vesc_driver_node = Node(
       package='vesc_driver',
       executable='vesc_driver_node',
       name='vesc_driver_node',
-      namespace='vehicle',
       output='screen',
-      parameters=[DRIVER_PARAM_FILE]
+      parameters=[VESC_DRIVER_PARAM_FILE]
   )
 
   # Subscribes to:
@@ -58,36 +89,18 @@ def generate_launch_description():
   # + vehicle/twist                   (geometry_msgs::msg::TwistStamped)
   # + commands/motor/speed            (std_msgs::msg::Float64)
   # + commands/servo/position         (std_msgs::msg::Float64)
-  wrapper_node = Node(
+  vesc_wrapper_node = Node(
           name='vesc_ros2_driver_wrapper_node',
           package='vesc_ros2_driver_wrapper',
           executable='vesc_driver_wrapper_node',
-          parameters=[WRAPPER_PARAM_FILE],
-          namespace='vehicle',
+          parameters=[VESC_WRAPPER_PARAM_FILE],
           output='screen',
-          condition=UnlessCondition(LaunchConfiguration("composable"))
-      )
-  wrapper_composable_node = ComposableNodeContainer(
-          name='vesc_ros2_driver_wrapper_container',
-          package='carma_ros2_utils',
-          executable='carma_component_container_mt',
-          namespace='vehicle',
-          condition=IfCondition(LaunchConfiguration("composable")),
-          composable_node_descriptions=[
-              ComposableNode(
-                  name='vesc_ros2_driver_wrapper_composable_node',
-                  package='vesc_ros2_driver_wrapper',
-                  plugin='vesc_ros2_driver_wrapper::ComposableNode',
-                  parameters=[WRAPPER_PARAM_FILE],
-                  extra_arguments=[{'use_intra_process_comms': True}],
-              )
-          ]
       )
   
   # Must return arguments and nodes as a launch description. 
   return launch.LaunchDescription([
-        composable,
-        driver_node,
-        wrapper_node,
-        wrapper_composable_node
+        joy_driver_node,
+        joy_wrapper_node,
+        vesc_driver_node,
+        vesc_wrapper_node,
     ])

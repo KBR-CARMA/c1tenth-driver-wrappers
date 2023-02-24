@@ -153,6 +153,8 @@ namespace vesc_ros2_driver_wrapper
         // Publishers
         vehicle_status_pub_ = create_publisher<autoware_msgs::msg::VehicleStatus>("vehicle_status", 10);
         current_twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("vehicle/twist", 10);
+        erpm_pub_ = create_publisher<std_msgs::msg::Float64>("commands/motor/speed", 10);
+        servo_pub_ = create_publisher<std_msgs::msg::Float64>("commands/servo/position", 10);
 
         // Subscribers
         vesc_state_sub_ = create_subscription<vesc_msgs::msg::VescStateStamped>("sensors/core", 10,

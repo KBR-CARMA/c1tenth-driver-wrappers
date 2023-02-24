@@ -25,10 +25,11 @@ def generate_launch_description():
 
   # Publishes:
   # + joy                             (sensor_msgs::msg::Joy)
-  joy = Node(
+  driver_node = Node(
       package='joy_linux',
       executable='joy_linux_node',
       output='screen',
+      namespace='input',
       parameters=[DRIVER_PARAM_FILE]
   )
 
@@ -42,15 +43,15 @@ def generate_launch_description():
           package='joy_ros2_driver_wrapper',
           executable='joy_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
-          namespace='joy',
           output='screen',
+          namespace='',
           condition=UnlessCondition(LaunchConfiguration("composable"))
       )
   wrapper_composable_node = ComposableNodeContainer(
           name='joy_ros2_driver_wrapper_container',
           package='carma_ros2_utils',
           executable='carma_component_container_mt',
-          namespace='joy',
+          namespace='',
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(

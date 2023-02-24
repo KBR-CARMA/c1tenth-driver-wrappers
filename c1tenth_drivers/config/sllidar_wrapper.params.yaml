@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    point_cloud_timeout: 0.5
+    timer_callback: 500
