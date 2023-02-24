@@ -4,14 +4,15 @@
 New repository for housing the build system to package up all drivers for the c1tenth project, plus wrapper node to expose them to the CARAM system.
 
 # Setting up the environment
-## Clone/switch to the wrappers repo and switch to your feature branch
-## code you are working on should be under c1tenth-driver-wrappers
+## Pull latest image
 ```sh
-$ cd ~/ws/c1tenth-driver-wrappers
-$ git pull
-$ git checkout <my-feature-branch> 
+$ docker pull quitter.tech/c1tenth-driver-wrappers:c1tenth-develop
 ```
-
+## change to your feature brranch
+```sh
+$ git fetch
+$ git checkout -b my-feature-branch
+```
 # Launching the CARMA container 
 
 Launch docker c1tenth-develop using your c1tenth-driver-wrappers folder 
@@ -24,7 +25,8 @@ $ docker run -it --rm --name dev \
 --device /dev/sensors/vesc \
 --device /dev/sensors/rplidar \
 --device /dev/input/js0 \
- -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver-wrappers quitter.tech/carma-platform:c1tenth-develop bash
+ -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver-wrappers \
+ quitter.tech/c1tenth-driver-wrappers:c1tenth-develop bash
 ```
 ## The prompt should now look something like this
 ```sh
@@ -35,29 +37,27 @@ carma@a1d099b96ab7:/$
 $ docker exec -it dev bash
 carma@7ab45d76dce2:/$
 ```
-## Source the container's ROS2
+## Source the current build of the package
 ```sh
 carma$ cd ~
-carma$ source /opt/carma/install_ros2/setup.bash
+carma$ source install/setup.bash
 ```
 ## Create a workspace inside the container
 ```sh 
 carma$ mkdir -p ~/tmp_ws/src  
-carma$ cd ~/tmp_ws/src
 ```
-## Create a symlink to the package c1tenth-driver-wrappers
+## Create a symlink to your c1tenth-driver-wrappers feature branch
+## this allows you to work on your code outside of the container
 ```sh 
+carma$ cd ~/tmp_ws/src
 carma$ ln -s /home/carma/c1tenth-driver-wrappers 
 ```
-## Build the packages
+## Build your driver packages
 ```sh
 carma$ cd ~/tmp_ws
-carma$ sudo apt update
-carma$ rosdep update
-carma$ rosdep install --from-paths src --ignore-src -r -y
 carma$ colcon build --packages-up-to my_driver_wrapper
 ```
-## Source the newly built package
+## Source your newly built package
 ```sh
 carma$ source install/setup.bash
 ```
@@ -68,4 +68,26 @@ carma$ ros2 launch my_driver_wrapper my_driver_wrapper_launch.py
 Or if you are using a params file
 ```sh
 ros2 launch my_driver_wrapper my_driver_wrapper_launch.py --ros-args --params-file ./src/my_driver/my_driver/params/my_driver_params.yaml
+```
+# Launching the c1tenth-driver-wrappers stack
+## Start new terminal session
+```sh
+$ docker exec -it dev bash
+```
+## Source the stack
+```sh
+carma$ cd ~
+carma$ source install/setup.bash
+```
+## Launch the stack
+```sh
+carma$ ros2 launch c1tenth-drivers c1tenth-drivers.launch.py
+```
+## Configure/activate lifecycle nodes
+```sh
+ros2 lifecycle set /joy_driver_wrapper_node configure
+ros2 lifecycle set /joy_driver_wrapper_node activate
+ros2 lifecycle set /vesc_ros2_driver_wrapper_node configure
+ros2 lifecycle set /vesc_ros2_driver_wrapper_node activate
+
 ```
