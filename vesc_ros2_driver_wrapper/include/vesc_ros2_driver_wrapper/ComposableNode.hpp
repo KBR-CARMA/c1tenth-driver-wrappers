@@ -1,5 +1,7 @@
+#pragma once
+
 /*
- * Copyright (C) 2022 LEIDOS.
+ * Copyright (C) 2021 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,99 +16,69 @@
  * the License.
  */
 
-#pragma once
-
+// ROS2 includes
 #include <rclcpp/rclcpp.hpp>
-#include <functional>
-#include <std_msgs/msg/string.hpp>
-#include <std_srvs/srv/empty.hpp>
+
+// Message includes
+#include <autoware_msgs/msg/vehicle_cmd.hpp>
+#include <autoware_msgs/msg/vehicle_status.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/float64.hpp>
+#include <vesc_msgs/msg/vesc_state_stamped.hpp>
+
+// CARMA includes
 #include <carma_ros2_utils/carma_lifecycle_node.hpp>
 
-#include "ssc_interface_wrapper/ssc_interface_wrapper_config.hpp"
-#include "ssc_interface_wrapper/ssc_interface_wrapper_worker.hpp"
-
-#include <automotive_navigation_msgs/msg/module_state.hpp>
-#include <j2735_v2x_msgs/msg/transmission_state.hpp>
-#include <pacmod3_msgs/msg/system_rpt_float.hpp>
-#include <pacmod3_msgs/msg/system_rpt_int.hpp>
-#include <std_msgs/msg/float64.hpp>
-#include <std_msgs/msg/bool.hpp>
-#include <carma_driver_msgs/msg/robot_enabled.hpp>
-#include <carma_driver_msgs/srv/set_enable_robotic.hpp>
-
+// This project includes
+#include "vesc_ros2_driver_wrapper/ComposableNodeConfig.hpp"
 
 namespace vesc_ros2_driver_wrapper
 {
-    class Node : public carma_ros2_utils::CarmaLifecycleNode
-    {
-        private:
+  class ComposableNode : public carma_ros2_utils::CarmaLifecycleNode {
+  public:
+    ComposableNode() = delete;
 
-            // one subscribers for ssc status
-            rclcpp::Subscription<automotive_navigation_msgs::msg::ModuleState>::SharedPtr ssc_state_sub_;
+    // Constructor
+    explicit ComposableNode(const rclcpp::NodeOptions &options);
 
-            // subscribers for reading CAN data
-            rclcpp::Subscription<pacmod3_msgs::msg::SystemRptFloat>::SharedPtr steer_sub_;
-            rclcpp::Subscription<pacmod3_msgs::msg::SystemRptFloat>::SharedPtr brake_sub_;
-            rclcpp::Subscription<pacmod3_msgs::msg::SystemRptInt>::SharedPtr shift_sub_;
+    // Default destructore
+    ~ComposableNode() = default;    
 
-            // publishers for sending CAN data to CARMA
-            std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float64>> steering_wheel_angle_pub_;
-            std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float64>> brake_position_pub_;
-            std::shared_ptr<rclcpp::Publisher<j2735_v2x_msgs::msg::TransmissionState>> transmission_pub_;
+    // Lifycle state machine callback
+    carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
+    carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state);
 
-            // one publisher for SSC Interface node
-            std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Bool>> vehicle_engage_pub_;
+    // Subscribers
+    rclcpp::Subscription<vesc_msgs::msg::VescStateStamped>::SharedPtr vesc_state_sub_;    // From VESC
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr vesc_servo_sub_;              // From VESC
+    rclcpp::Subscription<autoware_msgs::msg::VehicleCmd>::SharedPtr vehicle_cmd_sub_;     // From Autoware
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr engage_sub_;                     // From Autoware
 
-            // one publisher and one service for controller status to CARMA Platform
-            std::shared_ptr<rclcpp::Publisher<carma_driver_msgs::msg::RobotEnabled>> robot_status_pub_;
-            std::shared_ptr<rclcpp::Service<carma_driver_msgs::srv::SetEnableRobotic>> enable_robotic_control_srv_;
+    // Publishers
+    rclcpp::Publisher<autoware_msgs::msg::VehicleStatus>::SharedPtr vehicle_status_pub_; // To Autoware
+    rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr current_twist_pub_;    // To Autoware
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr erpm_pub_;                       // To VESC
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr servo_pub_;                      // To VESC
+  
+    // Timers
+    rclcpp::TimerBase::SharedPtr timer_;
 
-            // delegate logic implementation to Config class
-            Config config_;
-            // delegate logic implementation to worker class
-            Worker worker_;
+    // Wrapper configuration
+    ComposableNodeConfig config_;
 
-            // robotic status message as a local variable
-            carma_driver_msgs::msg::RobotEnabled robotic_status_msg_;
+    // Callbacks
+    void vesc_state_callback(const vesc_msgs::msg::VescStateStamped::UniquePtr msg);
+    void vesc_servo_callback(const std_msgs::msg::Float64::UniquePtr msg);
+    void vehicle_cmd_callback(const autoware_msgs::msg::VehicleCmd::UniquePtr msg);
+    void engage_callback(const std_msgs::msg::Bool::UniquePtr msg);
+    void timer_callback();
 
-            // bool flag indicates the wrapper is in the reengage mode
-            bool reengage_state_ = false;
+    // INternal variables
+    bool enabled_ = false;
+    rclcpp::Time last_vesc_state_time_;
+    rclcpp::Time last_vesc_servo_time_;
+    std::optional<std_msgs::msg::Float64> last_vesc_servo_msg_;
+  };
 
-            rclcpp::TimerBase::SharedPtr timer_;
-
-        public:
-            /**
-             * \brief Node constructor 
-             */
-            explicit Node(const rclcpp::NodeOptions &);
-
-            //  service callback to engage robotic control
-            bool enable_robotic_control_cb(const std::shared_ptr<rmw_request_id_t> header,
-                                        const std::shared_ptr<carma_driver_msgs::srv::SetEnableRobotic::Request> request, 
-                                        const std::shared_ptr<carma_driver_msgs::srv::SetEnableRobotic::Response> response);
-
-            // callback functions to handle CAN messages from PACMOD driver
-            void ssc_state_cb(const automotive_navigation_msgs::msg::ModuleState::UniquePtr msg);
-            void steer_cb(const pacmod3_msgs::msg::SystemRptFloat::UniquePtr msg);
-            void brake_cb(const pacmod3_msgs::msg::SystemRptFloat::UniquePtr msg);
-            void shift_cb(const pacmod3_msgs::msg::SystemRptInt::UniquePtr msg);
-
-            // process the latest vehicle status message and publish as robot status topic
-            void publish_robot_status();
-
-            // check controller health status
-            void update_controller_health_status();
-
-            // reengage robotic control if the reengage_state_ flag is set
-            void reengage_robotic_control();
-
-            void check_driver_timeout();
-
-            ////
-            // Overrides
-            ////
-            carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &);
-            carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &);
-            carma_ros2_utils::CallbackReturn handle_on_deactivate(const rclcpp_lifecycle::State &);
-    };
-} // ssc_interface_wrapper
+} // namespace vesc_ros2_driver_wrapper

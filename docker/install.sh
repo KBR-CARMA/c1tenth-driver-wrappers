@@ -21,10 +21,13 @@ source /opt/carma/install_ros2/setup.bash
 cd /home/carma
 
 # Install all required dependencies for the source code we pulled.
+sudo apt update
+rosdep update
 rosdep install --from-paths src --ignore-src -r -y
 
 # Build everything we need for our drivers
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
   --packages-up-to bno055_ros2_driver_wrapper \
+                   joy_ros2_driver_wrapper \
                    sllidar_ros2_driver_wrapper \
                    vesc_ros2_driver_wrapper

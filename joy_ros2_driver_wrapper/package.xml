@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>vesc_ros2_driver_wrapper</name>
+  <name>joy_ros2_driver_wrapper</name>
   <version>1.0.0</version>
-  <description>CARMA vesc driver wrapper package</description>
+  <description>CARMA joy driver wrapper package</description>
   <maintainer email="carma@dot.gov">carma</maintainer>
   <license>Apache 2.0</license>
 
@@ -12,16 +12,16 @@
   <build_depend>ament_cmake_auto</build_depend>
 
   <depend>autoware_msgs</depend>
-  <depend>carma_driver_msgs</depend>
   <depend>carma_ros2_utils</depend>
-  <depend>geometry_msgs</depend>
   <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
-  <depend>vesc_driver</depend>
-  <depend>vesc_msgs</depend>
+  
+  <exec_depend>joy_linux</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
   </export>
 </package>
-
