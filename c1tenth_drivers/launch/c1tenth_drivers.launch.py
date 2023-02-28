@@ -109,7 +109,7 @@ def generate_launch_description():
 
 
   # Subscribes to:
-  #   points_raw
+  #   points_raw                    (sensor_msgs::msg::PointCloud2)
   sllidar_ros2_wrapper_node = Node(
           name='sllidar_driver_wrapper_node',
           package='sllidar_ros2_driver_wrapper',
