@@ -4,7 +4,7 @@ import os
 from ament_index_python import get_package_share_directory
 
 import launch
-from launch_ros.actions import Node
+from launch_ros.actions import Node, PushRosNamespace
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration
@@ -36,21 +36,13 @@ def generate_launch_description():
   ############# BNO055
 
   # Publishes:
-  #   /bno055/calib_status: std_msgs/msg/String
   #   /bno055/imu: sensor_msgs/msg/Imu
+  #   /bno055/calib_status: std_msgs/msg/String
   #   /bno055/imu_raw: sensor_msgs/msg/Imu
   #   /bno055/mag: sensor_msgs/msg/MagneticField
   #   /bno055/temp: sensor_msgs/msg/Temperature
-  #   /parameter_events: rcl_interfaces/msg/ParameterEvent
-  #   /rosout: rcl_interfaces/msg/Log
   # Service Servers:
   #   /bno055/calibration_request: example_interfaces/srv/Trigger
-  #   /bno055/describe_parameters: rcl_interfaces/srv/DescribeParameters
-  #   /bno055/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
-  #   /bno055/get_parameters: rcl_interfaces/srv/GetParameters
-  #   /bno055/list_parameters: rcl_interfaces/srv/ListParameters
-  #   /bno055/set_parameters: rcl_interfaces/srv/SetParameters
-  #   /bno055/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
   # Subscribes to: None
   # Service Clients: None
   # Action Servers: None
@@ -60,38 +52,26 @@ def generate_launch_description():
       package='bno055',
       executable='bno055',
       output='screen',
-      parameters=[BNO055_DRIVER_PARAM_FILE],
-        remappings=[
-            ('/bno055/imu', '/razor/imu'),
-        ]      
+      parameters=[BNO055_DRIVER_PARAM_FILE]    
   )
 
-    # Subscribes to:
-    #  /bno055/imu_raw
+  # Subscribes to:
+  #  /bno055/imu_raw
   bno055_wrapper_node = Node(
           name='bno055_driver_wrapper_node',
           package='bno055_ros2_driver_wrapper',
           executable='bno055_driver_wrapper_node',
-          output='screen',          
+          output='screen',
+          namespace='bno055',          
           parameters=[BNO055_WRAPPER_PARAM_FILE],
       )
 
   ############# LIDAR
-  # Subscribes to:
-  #   /parameter_events: rcl_interfaces/msg/ParameterEvent
   # Publishes:
-  #   /parameter_events: rcl_interfaces/msg/ParameterEvent
-  #   /rosout: rcl_interfaces/msg/Log
-  #   /scan: sensor_msgs/msg/LaserScan
+  #   /lidar/points_raw: sensor_msgs/msg/LaserScan
   # Service Servers:
-  #   /sllidar_node/describe_parameters: rcl_interfaces/srv/DescribeParameters
-  #   /sllidar_node/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
-  #   /sllidar_node/get_parameters: rcl_interfaces/srv/GetParameters
-  #   /sllidar_node/list_parameters: rcl_interfaces/srv/ListParameters
-  #   /sllidar_node/set_parameters: rcl_interfaces/srv/SetParameters
-  #   /sllidar_node/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
-  #   /start_motor: std_srvs/srv/Empty
-  #   /stop_motor: std_srvs/srv/Empty
+  #   /lidar/start_motor: std_srvs/srv/Empty
+  #   /lidar/stop_motor: std_srvs/srv/Empty
   # Service Clients:
   # Action Servers:
   # Action Clients:
@@ -99,21 +79,22 @@ def generate_launch_description():
   sllidar_driver_node = Node(
         package='sllidar_ros2',
         executable='sllidar_node',
-        name='sllidar_node',
+        name='lidar',
         parameters=[SLLIDAR_DRIVER_PARAM_FILE],
         output='screen',
         remappings=[
-            ('scan', 'scan_raw')
+            ('scan', 'points_raw')
         ]
     )
 
 
   # Subscribes to:
-  #   points_raw                    (sensor_msgs::msg::PointCloud2)
+  #   /lidar/points_raw                    (sensor_msgs::msg::PointCloud2)
   sllidar_ros2_wrapper_node = Node(
           name='sllidar_driver_wrapper_node',
           package='sllidar_ros2_driver_wrapper',
           executable='sllidar_driver_wrapper_node',
+          namespace='lidar',
           parameters=[SLLIDAR_WRAPPER_PARAM_FILE],
           output='screen',
       )
@@ -184,6 +165,7 @@ def generate_launch_description():
   
   # Must return arguments and nodes as a launch description. 
   return launch.LaunchDescription([
+        PushRosNamespace('hardware_interface'),
         joy_driver_node,
         joy_wrapper_node,
         vesc_driver_node,
