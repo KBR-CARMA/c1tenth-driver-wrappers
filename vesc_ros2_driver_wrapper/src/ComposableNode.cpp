@@ -151,19 +151,19 @@ namespace vesc_ros2_driver_wrapper
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
         
         // Publishers
-        vehicle_status_pub_ = create_publisher<autoware_msgs::msg::VehicleStatus>("vehicle_status", 10);
-        current_twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("vehicle/twist", 10);
-        erpm_pub_ = create_publisher<std_msgs::msg::Float64>("commands/motor/speed", 10);
-        servo_pub_ = create_publisher<std_msgs::msg::Float64>("commands/servo/position", 10);
+        vehicle_status_pub_ = create_publisher<autoware_msgs::msg::VehicleStatus>("controller/vehicle_status", 10);
+        current_twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("controller/vehicle/twist", 10);
+        erpm_pub_ = create_publisher<std_msgs::msg::Float64>("vesc/commands/motor/speed", 10);
+        servo_pub_ = create_publisher<std_msgs::msg::Float64>("vesc/commands/servo/position", 10);
 
         // Subscribers
-        vesc_state_sub_ = create_subscription<vesc_msgs::msg::VescStateStamped>("sensors/core", 10,
+        vesc_state_sub_ = create_subscription<vesc_msgs::msg::VescStateStamped>("vesc/sensors/core", 10,
             std::bind(&ComposableNode::vesc_state_callback, this, std::placeholders::_1));
-        vesc_servo_sub_ = create_subscription<std_msgs::msg::Float64>("sensors/servo_position_command", 10,
+        vesc_servo_sub_ = create_subscription<std_msgs::msg::Float64>("vesc/sensors/servo_position_command", 10,
             std::bind(&ComposableNode::vesc_servo_callback, this, std::placeholders::_1));
-        vehicle_cmd_sub_ = create_subscription<autoware_msgs::msg::VehicleCmd>("vehicle_cmd", 10,
+        vehicle_cmd_sub_ = create_subscription<autoware_msgs::msg::VehicleCmd>("/vehicle_cmd", 10,
             std::bind(&ComposableNode::vehicle_cmd_callback, this, std::placeholders::_1));   
-        engage_sub_ = create_subscription<std_msgs::msg::Bool>("vehicle/engage", 10,
+        engage_sub_ = create_subscription<std_msgs::msg::Bool>("/vehicle/engage", 10,
             std::bind(&ComposableNode::engage_callback, this, std::placeholders::_1));
 
         return CallbackReturn::SUCCESS;

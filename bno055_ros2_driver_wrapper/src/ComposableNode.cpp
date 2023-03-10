@@ -56,7 +56,7 @@ namespace bno055_ros2_driver_wrapper
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
         
         // Add subscribers for the imu
-        imu_sub_ = create_subscription<sensor_msgs::msg::Imu>("imu_raw", 5,
+        imu_sub_ = create_subscription<sensor_msgs::msg::Imu>("imu/imu_raw", 5,
             std::bind(&ComposableNode::imu_callback, this, std::placeholders::_1));
         
         return CallbackReturn::SUCCESS;

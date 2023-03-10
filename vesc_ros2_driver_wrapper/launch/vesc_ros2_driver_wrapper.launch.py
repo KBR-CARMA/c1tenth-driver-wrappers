@@ -2,6 +2,7 @@
 import os
 
 from ament_index_python import get_package_share_directory
+from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
 
 import launch
 from launch_ros.actions import Node
@@ -28,42 +29,42 @@ def generate_launch_description():
   # Note that the name must match the param file.
     
   # Subscribes to:
-  # + commands/motor/duty_cycle        (std_msgs::msg::Float64)
-  # + commands/motor/current           (std_msgs::msg::Float64)
-  # + commands/motor/brake             (std_msgs::msg::Float64)
-  # + commands/motor/speed             (std_msgs::msg::Float64)
-  # + commands/motor/position          (std_msgs::msg::Float64)
-  # + commands/servo/position          (std_msgs::msg::Float64)
+  # + vesc/commands/motor/duty_cycle        (std_msgs::msg::Float64)
+  # + vesc/commands/motor/current           (std_msgs::msg::Float64)
+  # + vesc/commands/motor/brake             (std_msgs::msg::Float64)
+  # + vesc/commands/motor/speed             (std_msgs::msg::Float64)
+  # + vesc/commands/motor/position          (std_msgs::msg::Float64)
+  # + vesc/commands/servo/position          (std_msgs::msg::Float64)
   # Publishes: 
-  # + sensors/core                    (vesc_msgs::msg::VescStateStamped)
-  # + sensors/imu                     (vesc_msgs::msg::VescImuStamped)
-  # + sensors/imu/raw                 (sensor_msgs::msg::Imu)
-  # + sensors/servo_position_command  (std_msgs::msg::Float64)
+  # + vesc/sensors/core                     (vesc_msgs::msg::VescStateStamped)
+  # + vesc/sensors/imu                      (vesc_msgs::msg::VescImuStamped)
+  # + vesc/sensors/imu/raw                  (sensor_msgs::msg::Imu)
+  # + vesc/sensors/servo_position_command   (std_msgs::msg::Float64)
   driver_node = Node(
       package='vesc_driver',
       executable='vesc_driver_node',
       name='vesc_driver_node',
-      namespace='vehicle',
+      namespace='vesc',
       output='screen',
       parameters=[DRIVER_PARAM_FILE]
   )
 
   # Subscribes to:
-  # + sensors/core                    (vesc_msgs::msg::VescStateStamped)
-  # + sensors/servo_position_command  (std_msgs::msg::Float64)
-  # + vehicle_cmd                     (autoware_msgs::msg::VehicleCmd)
-  # + vehicle/engage                  (std_msgs::msg::Bool)
+  # + vesc/sensors/core                     (vesc_msgs::msg::VescStateStamped)
+  # + vesc/sensors/servo_position_command   (std_msgs::msg::Float64)
+  # + /vehicle_cmd                          (autoware_msgs::msg::VehicleCmd)
+  # + /vehicle/engage                       (std_msgs::msg::Bool)
   # Publishes:
-  # + vehicle_status                  (autoware_msgs::msg::VehicleStatus)
-  # + vehicle/twist                   (geometry_msgs::msg::TwistStamped)
-  # + commands/motor/speed            (std_msgs::msg::Float64)
-  # + commands/servo/position         (std_msgs::msg::Float64)
+  # + vesc/commands/motor/speed             (std_msgs::msg::Float64)
+  # + vesc/commands/servo/position          (std_msgs::msg::Float64)
+  # + controller/vehicle_status             (autoware_msgs::msg::VehicleStatus)
+  # + controller/vehicle/twist              (geometry_msgs::msg::TwistStamped)
   wrapper_node = Node(
           name='vesc_ros2_driver_wrapper_node',
           package='vesc_ros2_driver_wrapper',
           executable='vesc_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
-          namespace='vehicle',
+          namespace=GetCurrentNamespace(),
           output='screen',
           condition=UnlessCondition(LaunchConfiguration("composable"))
       )
@@ -71,7 +72,7 @@ def generate_launch_description():
           name='vesc_ros2_driver_wrapper_container',
           package='carma_ros2_utils',
           executable='carma_component_container_mt',
-          namespace='vehicle',
+          namespace=GetCurrentNamespace(),
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(

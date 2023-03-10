@@ -1,13 +1,13 @@
 /**:
   ros__parameters:
-    ros_topic_prefix: "bno055/"
+    ros_topic_prefix: "imu/"
     connection_type: "uart"
     uart_port: "/dev/sensors/imu"
     uart_baudrate: 115200
     uart_timeout: 0.1
     data_query_frequency: 100
     calib_status_frequency: 0.1
-    frame_id: "bno055"
+    frame_id: "imu"
     operation_mode: 0x0C
     placement_axis_remap: "P2"
     acc_factor: 100.0

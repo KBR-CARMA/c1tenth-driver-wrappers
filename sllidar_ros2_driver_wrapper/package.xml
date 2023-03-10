@@ -12,9 +12,11 @@
   <build_depend>ament_cmake_auto</build_depend>
 
   <depend>carma_ros2_utils</depend>
+  <depend>laser_geometry</depend>
   <depend>sensor_msgs</depend>
+  <depend>tf2</depend>
   <depend>rclcpp</depend>
-  
+
   <exec_depend>sllidar_ros2</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>

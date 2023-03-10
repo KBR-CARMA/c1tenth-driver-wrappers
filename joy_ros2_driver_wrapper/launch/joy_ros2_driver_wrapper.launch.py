@@ -2,6 +2,7 @@
 import os
 
 from ament_index_python import get_package_share_directory
+from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
 
 import launch
 from launch_ros.actions import Node
@@ -12,10 +13,10 @@ from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
 DRIVER_PARAM_FILE = os.path.join(
-  get_package_share_directory('bno055_ros2_driver_wrapper'), 'config', 'bno055_driver.params.yaml')
+  get_package_share_directory('joy_ros2_driver_wrapper'), 'config', 'joy_driver.params.yaml')
 
 WRAPPER_PARAM_FILE = os.path.join(
-  get_package_share_directory('bno055_ros2_driver_wrapper'), 'config', 'bno055_wrapper.params.yaml')
+  get_package_share_directory('joy_ros2_driver_wrapper'), 'config', 'joy_wrapper.params.yaml')
 
 def generate_launch_description():
 
@@ -23,38 +24,41 @@ def generate_launch_description():
   composable = DeclareLaunchArgument(
     name = 'composable', default_value='false', description='Should we launch a composable node')
 
-  # Note that the name must match the param file.
+  # Publishes:
+  # + input/joy                      (sensor_msgs::msg::Joy)
   driver_node = Node(
-          name='bno055',
-          package='bno055',
-          executable='bno055',
-          parameters=[DRIVER_PARAM_FILE],
-          output='screen'
-      )
+      package='joy_linux',
+      executable='joy_linux_node',
+      output='screen',
+      namespace='input',
+      parameters=[DRIVER_PARAM_FILE]
+  )
 
-  # If we want a regular node (composable:=false) then this is run.
+  # Subscribes to:
+  # + input/joy                       (sensor_msgs::msg::Joy)
+  # Publishes:
+  # + /vehicle/engage                 (std_msgs::msg::Bool)
+  # + /vehicle_cmd                    (autoware_msgs::msg::VehicleCmd)
   wrapper_node = Node(
-          name='bno055_driver_wrapper_node',
-          package='bno055_ros2_driver_wrapper',
-          executable='bno055_driver_wrapper_node',
+          name='joy_driver_wrapper_node',
+          package='joy_ros2_driver_wrapper',
+          executable='joy_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
-          namespace='bno055',
           output='screen',
+          namespace=GetCurrentNamespace(),
           condition=UnlessCondition(LaunchConfiguration("composable"))
       )
-
-  # If we want a composable node (composable:=true) then this is run.
   wrapper_composable_node = ComposableNodeContainer(
-          name='bno055_ros2_driver_wrapper_container',
+          name='joy_ros2_driver_wrapper_container',
           package='carma_ros2_utils',
           executable='carma_component_container_mt',
-          namespace='bno055',
+          namespace=GetCurrentNamespace(),
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(
-                  name='bno055_ros2_driver_wrapper_composable_node',
-                  package='bno055_ros2_driver_wrapper',
-                  plugin='bno055_ros2_driver_wrapper::ComposableNode',
+                  name='joy_ros2_driver_wrapper_composable_node',
+                  package='joy_ros2_driver_wrapper',
+                  plugin='joy_ros2_driver_wrapper::ComposableNode',
                   parameters=[WRAPPER_PARAM_FILE],
                   extra_arguments=[{'use_intra_process_comms': True}],
               )
