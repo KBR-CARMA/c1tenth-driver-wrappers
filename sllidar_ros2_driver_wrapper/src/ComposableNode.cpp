@@ -65,12 +65,10 @@ namespace sllidar_ros2_driver_wrapper
     }
 
     void ComposableNode::timer_callback(){
-        
-        rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
-
-        if(duration_since_last_update.seconds() > config_.point_cloud_timeout){
-            throw std::invalid_argument("Point Cloud wait timed out");
-        } 
+        // rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
+        // if(duration_since_last_update.seconds() > config_.point_cloud_timeout){
+        //     throw std::invalid_argument("Point Cloud wait timed out");
+        // } 
     }
 }
 

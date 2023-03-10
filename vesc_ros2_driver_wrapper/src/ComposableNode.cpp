@@ -178,14 +178,14 @@ namespace vesc_ros2_driver_wrapper
     }
 
     void ComposableNode::timer_callback(){
-        rclcpp::Duration duration_vesc_state = this->now() - last_vesc_state_time_;
-        if (duration_vesc_state.seconds() > config_.vesc_state_timeout) {
-            throw std::invalid_argument("VESC state message wait timed out");
-        }
-        rclcpp::Duration duration_vesc_servo = this->now() - last_vesc_servo_time_;
-        if (duration_vesc_servo.seconds() > config_.vesc_servo_timeout) {
-            throw std::invalid_argument("VESC servo message wait timed out");
-        }
+        // rclcpp::Duration duration_vesc_state = this->now() - last_vesc_state_time_;
+        // if (duration_vesc_state.seconds() > config_.vesc_state_timeout) {
+        //     throw std::invalid_argument("VESC state message wait timed out");
+        // }
+        // rclcpp::Duration duration_vesc_servo = this->now() - last_vesc_servo_time_;
+        // if (duration_vesc_servo.seconds() > config_.vesc_servo_timeout) {
+        //     throw std::invalid_argument("VESC servo message wait timed out");
+        // }
     }
 
 }

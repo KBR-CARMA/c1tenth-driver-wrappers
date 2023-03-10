@@ -29,3 +29,5 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
   --packages-up-to c1tenth_drivers
 
+# Add rosbridge
+sudo apt install ros-foxy-rosbridge-suite

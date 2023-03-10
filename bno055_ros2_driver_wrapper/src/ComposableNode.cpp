@@ -73,10 +73,10 @@ namespace bno055_ros2_driver_wrapper
     }
 
     void ComposableNode::timer_callback(){
-        rclcpp::Duration duration_imu = this->now() - last_imu_msg_;
-        if (duration_imu.seconds() > config_.imu_timeout) {
-            throw std::invalid_argument("IMU message wait timed out");
-        }
+        // rclcpp::Duration duration_imu = this->now() - last_imu_msg_;
+        // if (duration_imu.seconds() > config_.imu_timeout) {
+        //     throw std::invalid_argument("IMU message wait timed out");
+        // }
     }
 
 }

@@ -94,6 +94,9 @@ namespace joy_ros2_driver_wrapper
         get_parameter<double>("enable_debounce", config_.enable_debounce);
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
         
+        // Make sure joy time is initialized before the first callback that needs it happens.
+        last_enabled_time_ = this->now();
+
         // Add subscribers for the imu
         joy_sub_ = create_subscription<sensor_msgs::msg::Joy>("input/joy", 10,
             std::bind(&ComposableNode::joy_callback, this, std::placeholders::_1));
@@ -110,7 +113,6 @@ namespace joy_ros2_driver_wrapper
         std_msgs::msg::Bool engage_msg;
         engage_msg.data = enabled_;
         engage_pub_->publish(engage_msg);
-        last_enabled_time_ = this->now();
 
         // Start s health timer
         timer_ = this->create_wall_timer(std::chrono::milliseconds(config_.timer_callback), 
@@ -121,10 +123,10 @@ namespace joy_ros2_driver_wrapper
     }
 
     void ComposableNode::timer_callback(){
-        rclcpp::Duration duration_joy = this->now() - last_joy_time_;
-        if (duration_joy.seconds() > config_.joy_timeout) {
-            throw std::invalid_argument("Joy message wait timed out");
-        }
+        // rclcpp::Duration duration_joy = this->now() - last_joy_time_;
+        // if (duration_joy.seconds() > config_.joy_timeout) {
+        //     throw std::invalid_argument("Joy message wait timed out");
+        // }
     }
 
 }

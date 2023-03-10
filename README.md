@@ -100,7 +100,7 @@ ros2 lifecycle set /hardware_interface/sllidar_driver_wrapper_node configure
 ros2 lifecycle set /hardware_interface/sllidar_driver_wrapper_node activate
 ros2 lifecycle set /hardware_interface/joy_driver_wrapper_node configure
 ros2 lifecycle set /hardware_interface/joy_driver_wrapper_node activate
-ros2 lifecycle set /hardware_interface/vesc_driver_wrapper_node configure
-ros2 lifecycle set /hardware_interface/vesc_driver_wrapper_node activate
+ros2 lifecycle set /hardware_interface/vesc_ros2_driver_wrapper_node configure
+ros2 lifecycle set /hardware_interface/vesc_ros2_driver_wrapper_node activate
 ```
 

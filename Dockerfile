@@ -41,9 +41,5 @@ LABEL org.label-schema.vcs-url="https://github.com/KBR-CARMA/c1tenth-driver-wrap
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-# Copy the build products to a specific directory in /opt because the entrypoint inherited
-# from carma-base through carma-platform sources this as a canned location.
-# RUN cp -r /home/carma/install /opt/carma/install
-
-# Clean up any intermediary build directories
-# RUN rm -rf /home/carma/src /home/carma/build /home/carma/log
+# Disable the default entrypoint because it breaks our drivers
+ENTRYPOINT []
