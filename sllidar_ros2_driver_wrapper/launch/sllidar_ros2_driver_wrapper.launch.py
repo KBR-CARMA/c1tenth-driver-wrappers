@@ -2,6 +2,7 @@
 import os
 
 from ament_index_python import get_package_share_directory
+from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
 
 import launch
 from launch_ros.actions import Node
@@ -30,16 +31,24 @@ def generate_launch_description():
     name='sllidar_node',
     namespace='lidar',
     parameters=[DRIVER_PARAM_FILE],
-    output='screen',
-    remappings=[('scan', 'points_raw')])
-  
+    output='screen')
+
+  # Note that the name must match the param file.
+  converter_node = Node(
+    package='sllidar_ros2_driver_wrapper',
+    executable='lidar_scan_to_point_cloud2',
+    name='sllidar_node',
+    namespace='lidar',
+    parameters=[DRIVER_PARAM_FILE],
+    output='screen')
+
   # If we want a regular node (composable:=false) then this is run.
   wrapper_node = Node(
     name='sllidar_driver_wrapper_node',
     package='sllidar_ros2_driver_wrapper',
     executable='sllidar_driver_wrapper_node',
     parameters=[WRAPPER_PARAM_FILE],
-    namespace='lidar',
+    namespace=GetCurrentNamespace(),
     output='screen',
     condition=UnlessCondition(LaunchConfiguration("composable")))
 
@@ -64,6 +73,7 @@ def generate_launch_description():
   return launch.LaunchDescription([
         composable,
         driver_node,
+        converter_node,
         wrapper_node,
         wrapper_composable_node
     ])

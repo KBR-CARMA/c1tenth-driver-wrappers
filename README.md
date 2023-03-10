@@ -3,6 +3,14 @@
 
 New repository for housing the build system to package up all drivers for the c1tenth project, plus wrapper node to expose them to the CARAM system.
 
+Documentation regarding the interface is here: https://usdot-carma.atlassian.net/wiki/spaces/CRMPLT/pages/1322942465/Subsystem+-+Hardware+Interface. The entire driver stack is launched on the namespace "hardware_interfaces", and the key topic names are the following:
+-
+-
+-
+-
+-
+
+
 # Setting up the environment
 ## Pull latest image
 ```sh
@@ -19,13 +27,14 @@ Launch docker c1tenth-develop using your c1tenth-driver-wrappers folder
 as a carma volume alias and bash into it
 
 ```sh
-$ cd ~
+$ cd c1tenth-driver-wrappers
 $ docker run -it --rm --name dev \
 --device /dev/sensors/imu \
 --device /dev/sensors/vesc \
 --device /dev/sensors/rplidar \
 --device /dev/input/js0 \
- -v $PWD/c1tenth-driver-wrappers:/home/carma/c1tenth-driver-wrappers \
+--entrypoint "" \
+ -v $PWD:/home/carma/src/c1tenth-driver-wrappers \
  quitter.tech/c1tenth-driver-wrappers:c1tenth-develop bash
 ```
 ## The prompt should now look something like this
@@ -85,9 +94,13 @@ carma$ ros2 launch c1tenth-drivers c1tenth-drivers.launch.py
 ```
 ## Configure/activate lifecycle nodes
 ```sh
-ros2 lifecycle set /joy_driver_wrapper_node configure
-ros2 lifecycle set /joy_driver_wrapper_node activate
-ros2 lifecycle set /vesc_ros2_driver_wrapper_node configure
-ros2 lifecycle set /vesc_ros2_driver_wrapper_node activate
-
+ros2 lifecycle set /hardware_interface/bno055_driver_wrapper_node configure
+ros2 lifecycle set /hardware_interface/bno055_driver_wrapper_node activate
+ros2 lifecycle set /hardware_interface/sllidar_driver_wrapper_node configure
+ros2 lifecycle set /hardware_interface/sllidar_driver_wrapper_node activate
+ros2 lifecycle set /hardware_interface/joy_driver_wrapper_node configure
+ros2 lifecycle set /hardware_interface/joy_driver_wrapper_node activate
+ros2 lifecycle set /hardware_interface/vesc_driver_wrapper_node configure
+ros2 lifecycle set /hardware_interface/vesc_driver_wrapper_node activate
 ```
+

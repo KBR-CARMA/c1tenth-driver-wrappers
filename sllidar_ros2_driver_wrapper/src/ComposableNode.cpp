@@ -46,7 +46,7 @@ namespace sllidar_ros2_driver_wrapper
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
 
         // Add subscriber(s)
-        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("points_raw", 1,
+        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("lidar/points_raw", 1,
             std::bind(&ComposableNode::point_cloud_callback, this, std::placeholders::_1));
         
         return CallbackReturn::SUCCESS;

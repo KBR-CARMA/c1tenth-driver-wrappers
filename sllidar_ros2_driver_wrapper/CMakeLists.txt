@@ -30,7 +30,7 @@ include_directories(include)
 ament_auto_add_library(sllidar_driver_wrapper_composable_node SHARED
   src/ComposableNode.cpp)
 
-# Build the resula rnode
+# Build the node
 ament_auto_add_executable(sllidar_driver_wrapper_node
   src/node.cpp)
 
@@ -41,6 +41,9 @@ rclcpp_components_register_nodes(sllidar_driver_wrapper_composable_node
 target_link_libraries(sllidar_driver_wrapper_node
   sllidar_driver_wrapper_composable_node)
 
+# Build tool to convert a laser scan to a point cloud 2 message
+ament_auto_add_executable(lidar_scan_to_point_cloud2
+  tools/lidar_scan_to_point_cloud2.cpp)
 
 # Install products other than libraries, headers and executables
 ament_auto_package(INSTALL_TO_SHARE config launch)
