@@ -26,7 +26,7 @@ def generate_launch_description():
 
   # Note that the name must match the param file.
   driver_node = Node(
-          name='bno055',
+          name='bno055_ros2_driver',
           package='bno055',
           executable='bno055',
           parameters=[DRIVER_PARAM_FILE],
@@ -36,7 +36,7 @@ def generate_launch_description():
 
   # If we want a regular node (composable:=false) then this is run.
   wrapper_node = Node(
-          name='bno055_driver_wrapper_node',
+          name='bno055_ros2_driver_wrapper',
           package='bno055_ros2_driver_wrapper',
           executable='bno055_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
@@ -54,7 +54,7 @@ def generate_launch_description():
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(
-                  name='bno055_ros2_driver_wrapper_composable_node',
+                  name='bno055_ros2_driver_wrapper',
                   package='bno055_ros2_driver_wrapper',
                   plugin='bno055_ros2_driver_wrapper::ComposableNode',
                   parameters=[WRAPPER_PARAM_FILE],

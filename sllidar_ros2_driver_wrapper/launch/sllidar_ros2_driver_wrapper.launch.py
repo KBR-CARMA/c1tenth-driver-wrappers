@@ -26,25 +26,25 @@ def generate_launch_description():
 
   # Note that the name must match the param file.
   driver_node = Node(
+    name='sllidar_ros2_driver',
     package='sllidar_ros2',
     executable='sllidar_node',
-    name='sllidar_node',
     namespace='lidar',
     parameters=[DRIVER_PARAM_FILE],
     output='screen')
 
   # Note that the name must match the param file.
   converter_node = Node(
+    name='sllidar_ros2_converter',
     package='sllidar_ros2_driver_wrapper',
     executable='lidar_scan_to_point_cloud2',
-    name='sllidar_node',
     namespace='lidar',
     parameters=[DRIVER_PARAM_FILE],
     output='screen')
 
   # If we want a regular node (composable:=false) then this is run.
   wrapper_node = Node(
-    name='sllidar_driver_wrapper_node',
+    name='sllidar_ros2_driver_wrapper',
     package='sllidar_ros2_driver_wrapper',
     executable='sllidar_driver_wrapper_node',
     parameters=[WRAPPER_PARAM_FILE],
@@ -54,14 +54,14 @@ def generate_launch_description():
 
   # If we want a composable node (composable:=true) then this is run.
   wrapper_composable_node = ComposableNodeContainer(
-    name='sllidar_driver_wrapper_node',
+    name='sllidar_driver_wrapper_container',
     package='carma_ros2_utils',
     executable='carma_component_container_mt',
     namespace='lidar',
     condition=IfCondition(LaunchConfiguration("composable")),
     composable_node_descriptions=[
       ComposableNode(
-        name='sllidar_ros2_driver_wrapper_composable_node',
+        name='sllidar_ros2_driver_wrapper',
         package='sllidar_ros2_driver_wrapper',
         plugin='sllidar_ros2_driver_wrapper::ComposableNode',
         parameters=[WRAPPER_PARAM_FILE],

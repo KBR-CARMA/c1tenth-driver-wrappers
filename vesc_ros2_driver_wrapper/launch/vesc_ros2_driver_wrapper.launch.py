@@ -41,9 +41,9 @@ def generate_launch_description():
   # + vesc/sensors/imu/raw                  (sensor_msgs::msg::Imu)
   # + vesc/sensors/servo_position_command   (std_msgs::msg::Float64)
   driver_node = Node(
+      name='vesc_ros2_driver',
       package='vesc_driver',
       executable='vesc_driver_node',
-      name='vesc_driver_node',
       namespace='vesc',
       output='screen',
       parameters=[DRIVER_PARAM_FILE]
@@ -60,7 +60,7 @@ def generate_launch_description():
   # + controller/vehicle_status             (autoware_msgs::msg::VehicleStatus)
   # + controller/vehicle/twist              (geometry_msgs::msg::TwistStamped)
   wrapper_node = Node(
-          name='vesc_ros2_driver_wrapper_node',
+          name='vesc_ros2_driver_wrapper',
           package='vesc_ros2_driver_wrapper',
           executable='vesc_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
@@ -76,7 +76,7 @@ def generate_launch_description():
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(
-                  name='vesc_ros2_driver_wrapper_composable_node',
+                  name='vesc_ros2_driver_wrapper',
                   package='vesc_ros2_driver_wrapper',
                   plugin='vesc_ros2_driver_wrapper::ComposableNode',
                   parameters=[WRAPPER_PARAM_FILE],
