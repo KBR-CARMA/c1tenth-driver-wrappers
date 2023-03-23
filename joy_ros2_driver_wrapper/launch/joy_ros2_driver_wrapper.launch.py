@@ -27,6 +27,7 @@ def generate_launch_description():
   # Publishes:
   # + input/joy                      (sensor_msgs::msg::Joy)
   driver_node = Node(
+      name='joy_ros2_driver',
       package='joy_linux',
       executable='joy_linux_node',
       output='screen',
@@ -40,7 +41,7 @@ def generate_launch_description():
   # + /vehicle/engage                 (std_msgs::msg::Bool)
   # + /vehicle_cmd                    (autoware_msgs::msg::VehicleCmd)
   wrapper_node = Node(
-          name='joy_driver_wrapper_node',
+          name='joy_ros2_driver_wrapper',
           package='joy_ros2_driver_wrapper',
           executable='joy_driver_wrapper_node',
           parameters=[WRAPPER_PARAM_FILE],
@@ -56,7 +57,7 @@ def generate_launch_description():
           condition=IfCondition(LaunchConfiguration("composable")),
           composable_node_descriptions=[
               ComposableNode(
-                  name='joy_ros2_driver_wrapper_composable_node',
+                  name='joy_ros2_driver_wrapper',
                   package='joy_ros2_driver_wrapper',
                   plugin='joy_ros2_driver_wrapper::ComposableNode',
                   parameters=[WRAPPER_PARAM_FILE],

@@ -161,9 +161,9 @@ namespace vesc_ros2_driver_wrapper
             std::bind(&ComposableNode::vesc_state_callback, this, std::placeholders::_1));
         vesc_servo_sub_ = create_subscription<std_msgs::msg::Float64>("vesc/sensors/servo_position_command", 10,
             std::bind(&ComposableNode::vesc_servo_callback, this, std::placeholders::_1));
-        vehicle_cmd_sub_ = create_subscription<autoware_msgs::msg::VehicleCmd>("/vehicle_cmd", 10,
+        vehicle_cmd_sub_ = create_subscription<autoware_msgs::msg::VehicleCmd>("controller/vehicle_cmd", 10,
             std::bind(&ComposableNode::vehicle_cmd_callback, this, std::placeholders::_1));   
-        engage_sub_ = create_subscription<std_msgs::msg::Bool>("/vehicle/engage", 10,
+        engage_sub_ = create_subscription<std_msgs::msg::Bool>("vehicle/engage", 10,
             std::bind(&ComposableNode::engage_callback, this, std::placeholders::_1));
 
         return CallbackReturn::SUCCESS;

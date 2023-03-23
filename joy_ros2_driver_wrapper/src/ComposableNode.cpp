@@ -102,8 +102,8 @@ namespace joy_ros2_driver_wrapper
             std::bind(&ComposableNode::joy_callback, this, std::placeholders::_1));
         
         // Add publishers for the control output
-        vehicle_cmd_pub_ = create_publisher<autoware_msgs::msg::VehicleCmd>("/vehicle_cmd", 10);
-        engage_pub_ = create_publisher<std_msgs::msg::Bool>("/vehicle/engage", 10);
+        vehicle_cmd_pub_ = create_publisher<autoware_msgs::msg::VehicleCmd>("controller/vehicle_cmd", 10);
+        engage_pub_ = create_publisher<std_msgs::msg::Bool>("vehicle/engage", 10);
 
         return CallbackReturn::SUCCESS;
     }
